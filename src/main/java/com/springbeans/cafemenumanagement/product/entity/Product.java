@@ -31,7 +31,7 @@ public class Product {
     // 값을 저장할 때 builder에 기본값을 넣도록 함
     @Builder.Default
     @Column(nullable = false)
-    Boolean isActive = true;
+    boolean isActive = true;
 
     @Column
     LocalDateTime createdAt;
@@ -40,11 +40,12 @@ public class Product {
     LocalDateTime updatedAt;
 
 
-    public void update(String name, Integer price, String category, String filePath) {
+    public void update(String name, Integer price, String category, String filePath, boolean isActive) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.filePath = filePath;
+        this.isActive = isActive;
         updatedAt = LocalDateTime.now();
     }
 }

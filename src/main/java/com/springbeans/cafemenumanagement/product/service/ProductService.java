@@ -110,7 +110,8 @@ public class ProductService {
                 req.name(),
                 req.price(),
                 req.category(),
-                filePath
+                filePath,
+                product.isActive()
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(ProductResponse.from(product));
@@ -122,11 +123,19 @@ public class ProductService {
                 .orElseThrow(() ->
                     new IllegalArgumentException("상품이 존재하지 않습니다.")
                 );
-        productRepository.delete(product);
+
+        product.update(
+                product.getName(),
+                product.getPrice(),
+                product.getCategory(),
+                product.getFilePath(),
+                false
+        );
+
         return ResponseEntity.noContent().build();
     }
 
-    // 원본 파일의 확장자만 분리하는 코드 (coffee.jpg -> .jpg)
+    // 원본 파일의 확장자만 분리하는 메서드 (coffee.jpg -> .jpg)
     private String getExtension(String originalFilename){
         if (originalFilename == null || originalFilename.isBlank()) throw new IllegalArgumentException("파일명이 존재하지 않습니다.");
         String fileName = Paths.get(originalFilename).getFileName().toString();
