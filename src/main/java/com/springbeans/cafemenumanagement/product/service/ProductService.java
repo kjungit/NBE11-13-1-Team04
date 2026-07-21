@@ -2,6 +2,7 @@ package com.springbeans.cafemenumanagement.product.service;
 
 import com.springbeans.cafemenumanagement.product.dto.ProductSaveRequest;
 import com.springbeans.cafemenumanagement.product.dto.ProductResponse;
+import com.springbeans.cafemenumanagement.product.dto.ProductSaveResponse;
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ProductService {
             "/images/products/";
 
     @Transactional
-    public ResponseEntity<ProductResponse> create(ProductSaveRequest req) throws IOException {
+    public ResponseEntity<ProductSaveResponse> save(ProductSaveRequest req) throws IOException {
         Files.createDirectories(PRODUCT_IMAGE_ROOT);
 
         String fileName = UUID.randomUUID() + getExtension(req.image().getOriginalFilename());
@@ -57,7 +58,7 @@ public class ProductService {
                  .build());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ProductResponse.from(product));
+                .body(ProductSaveResponse.from(product));
     }
 
     @Transactional(readOnly = true)
@@ -79,7 +80,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> getByCategory(String category){
-        if (category == null || category.isBlank()) { throw new IllegalArgumentException("존재하지 않는 카테고리입니다."); };
+        if (category == null || category.isBlank()) { throw new IllegalArgumentException("존재하지 않는 카테고리입니다."); }
         List<ProductResponse> products = productRepository.findByCategoryOrderById(category)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
@@ -89,7 +90,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ResponseEntity<ProductResponse> update(Long id, ProductSaveRequest req) throws IOException {
+    public ResponseEntity<ProductSaveResponse> update(Long id, ProductSaveRequest req) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalArgumentException("상품이 존재하지 않습니다.")
@@ -114,7 +115,7 @@ public class ProductService {
                 product.isActive()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(ProductResponse.from(product));
+        return ResponseEntity.status(HttpStatus.OK).body(ProductSaveResponse.from(product));
     }
 
     @Transactional
