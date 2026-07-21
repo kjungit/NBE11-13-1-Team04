@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Pretendard, sans-serif;
+}
+
+body {
+    background: #f8f9fa; /* 조금 더 밝고 쾌적한 라이트 그레이 */
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* ==========================================================================
+   사이드바 스태프 스타일 (브라운 컨셉 강조)
+   ========================================================================== */
+.sidebar {
+    width: 260px;
+    background: #5d4037; /* 로그인 버튼 호버에 쓰인 짙은 브라운 */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar .logo h2 {
+    font-size: 22px;
+    color: #fff;
+}
+
+.sidebar .logo span {
+    font-size: 12px;
+    color: #d7ccc8;
+    letter-spacing: 1px;
+}
+
+.menu-list {
+    flex: 1;
+}
+
+.menu-list a {
+    display: block;
+    color: #d7ccc8;
+    text-decoration: none;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.menu-list a:hover, .menu-list a.active {
+    background: #6f4e37; /* 커피빈 시그니처 브라운 */
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #795548;
+    padding-top: 20px;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #bcaaa4;
+    color: #bcaaa4;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    background: #c62828;
+    color: white;
+    border-color: #c62828;
+}
+
+/* ==========================================================================
+   메인 콘텐츠 영역
+   ========================================================================== */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.content-header {
+    margin-bottom: 30px;
+}
+
+.content-header h1 {
+    color: #5d4037;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.content-header p {
+    color: #777;
+    font-size: 14px;
+}
+
+/* 어드민 공통 카드 */
+.admin-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .04);
+    margin-bottom: 20px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* 공통 버튼 */
+.btn-primary {
+    background: #6f4e37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background: #5d4037;
+}
+
+/* ==========================================================================
+   데이터 테이블 테이블 스타일
+   ========================================================================== */
+.menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.menu-table th, .menu-table td {
+    padding: 16px;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 14px;
+}
+
+.menu-table th {
+    background: #faf8f7;
+    color: #5d4037;
+    font-weight: 600;
+}
+
+.menu-table tbody tr:hover {
+    background: #fdfbfa;
+}
+
+/* 뱃지 스타일 */
+.badge {
+    background: #efebe9;
+    color: #5d4037;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.available {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.soldout {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* 작은 관리 버튼들 */
+.btn-sm {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 4px;
+    border: 1px solid transparent;
+}
+
+.btn-outline {
+    background: white;
+    border-color: #ddd;
+    color: #666;
+}
+
+.btn-outline:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.btn-danger {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.btn-danger:hover {
+    background: #c62828;
+    color: white;
+}
