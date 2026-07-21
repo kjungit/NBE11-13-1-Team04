@@ -36,4 +36,22 @@ public class AdminOrderApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/{orderId}/cancel-approve")
+    public ResponseEntity<Void> approveCancel(@PathVariable Long orderId) {
+        adminOrderService.approveCancelOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{orderId}/cancel-reject")
+    public ResponseEntity<Void> rejectCancel(@PathVariable Long orderId) {
+        adminOrderService.rejectCancelOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
+        adminOrderService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
 }

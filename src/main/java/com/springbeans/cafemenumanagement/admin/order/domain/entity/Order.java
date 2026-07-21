@@ -39,4 +39,19 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts = new ArrayList<>();
+
+    public void cancel() {
+        if (!this.status.isCancelable()) {
+            throw new IllegalStateException("취소할 수 없는 주문 상태입니다. (현재 상태: " + this.status.getDescription() + ")");
+        }
+        this.status = OrderStatus.CANCELED;
+    }
+
+    public void rejectCancel() {
+        if (this.status != OrderStatus.CANCEL_REQUESTED) {
+            throw new IllegalStateException("취소 요청 상태인 주문만 거절 처리를 할 수 있습니다.");
+        }
+        // 취소 요청 거절 시 '주문 확정' 상태로 변경
+        this.status = OrderStatus.CONFIRMED;
+    }
 }
