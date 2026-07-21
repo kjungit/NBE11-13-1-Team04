@@ -28,6 +28,11 @@ public class Product {
     @Column(nullable = false)
     String filePath;
 
+    // 값을 저장할 때 builder에 기본값을 넣도록 함
+    @Builder.Default
+    @Column(nullable = false)
+    Boolean isActive = true;
+
     @Column
     LocalDateTime createdAt;
 
