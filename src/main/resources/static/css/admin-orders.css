@@ -324,3 +324,41 @@ body {
 .total-price-wrapper span {
     color: #6f4e37;
 }
+
+/* 승인 버튼 */
+.btn-success {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+.btn-success:hover {
+    background: #1b5e20;
+}
+
+/* 거절 버튼 */
+.btn-warning {
+    background: #f57f17;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+.btn-warning:hover {
+    background: #e65100;
+}
+
+/* 버튼 컨테이너 여백 */
+#actionButtonContainer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
