@@ -124,6 +124,7 @@ public class ProductService {
                 .orElseThrow(() ->
                     new IllegalArgumentException("상품이 존재하지 않습니다.")
                 );
+        if (!product.isActive()) { throw new IllegalArgumentException("이미 삭제된 상품입니다."); }
 
         product.update(
                 product.getName(),
