@@ -1,3 +1,5 @@
 spring:
   application:
     name: Cafe Menu Management
+file:
+  upload-dir: ./uploads/products
