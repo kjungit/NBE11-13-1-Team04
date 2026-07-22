@@ -19,13 +19,10 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 하나의 문의에 하나의 답변만 등록할 수 있도록 일대일 관계를 설정함
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "question_id",
-            nullable = false,
-            unique = true
-    )
+    // 하나의 문의에 여러 답변 이력 존재 가능
+    // 단, 활성 상태의 답변은 최대 1개만 존재 가능
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
     @Column(nullable = false, columnDefinition = "TEXT")

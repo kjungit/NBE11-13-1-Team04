@@ -38,8 +38,9 @@ public class AnswerService {
                         new IllegalArgumentException("존재하지 않는 문의입니다.")
                 );
 
-        // 해당 문의에 답변 데이터가 이미 있는지 확인
-        if (answerRepository.existsByQuestionId(questionId)) {
+        // 해당 문의에 활성 답변 데이터가 이미 있는지 확인
+        // 비활성화된 답변 이력만 존재한다면 새 답변 등록 가능
+        if (answerRepository.existsByQuestionIdAndIsActiveTrue(questionId)) {
             // TODO : 답변 관련 커스텀 예외 적용
             throw new IllegalArgumentException("이미 답변이 등록된 문의입니다.");
         }
@@ -71,7 +72,7 @@ public class AnswerService {
     @Transactional
     public void delete(Long answerId) {
 
-        // 활성 답변 조회
+        // 답변 id로 활성 답변 조회
         Answer answer = answerRepository.findByIdAndIsActiveTrue(answerId)
                 // TODO : 답변 관련 커스텀 예외 적용
                 .orElseThrow(() ->
