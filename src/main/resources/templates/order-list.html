@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Bean - 주문 내역</title>
+  <link rel="stylesheet" href="/css/user-style.css">
+</head>
+<body>
+<div class="user-layout">
+  <header class="user-header">
+    <div class="header-container">
+      <a href="/" class="brand-logo">☕ Coffee Bean</a>
+      <nav class="user-nav">
+        <a href="/">상품 주문</a>
+        <a href="/orders" class="active">주문 내역</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="user-main">
+    <div class="page-header">
+      <h2>🛍️ 주문 내역 목록</h2>
+      <p>요청하신 전체 주문 내역을 확인하고 상세 상태를 조회할 수 있습니다.</p>
+    </div>
+
+    <section class="user-card">
+      <table class="data-table">
+        <thead>
+        <tr>
+          <th>주문 ID</th>
+          <th>이메일</th>
+          <th>주문 상태</th>
+          <th>주문 일시</th>
+          <th>상세 보기</th>
+        </tr>
+        </thead>
+        <tbody id="orderListBody">
+        <!-- Dynamic rendering -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="/js/order-list.js"></script>
+</body>
+</html>
