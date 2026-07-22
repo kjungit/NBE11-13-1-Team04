@@ -34,6 +34,9 @@ public class Question {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
     private Question(
             String email,
             String title,
@@ -44,6 +47,7 @@ public class Question {
         this.content = content;
         this.status = QuestionStatus.WAITING;
         this.createdAt = LocalDateTime.now();
+        this.isActive = true;
     }
 
     public static Question create(
@@ -57,5 +61,15 @@ public class Question {
     // 답변 등록 시 상태 변경
     public void markAsAnswered() {
         this.status = QuestionStatus.ANSWERED;
+    }
+
+    // 문의 비활성화
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    // 답변 삭제 시 문의 상태를 답변 대기중으로 돌림
+    public void markAsWaiting() {
+        this.status = QuestionStatus.WAITING;
     }
 }

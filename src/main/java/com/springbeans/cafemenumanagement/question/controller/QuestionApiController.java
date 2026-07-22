@@ -1,9 +1,6 @@
 package com.springbeans.cafemenumanagement.question.controller;
 
-import com.springbeans.cafemenumanagement.question.dto.QuestionCreateRequest;
-import com.springbeans.cafemenumanagement.question.dto.QuestionDetailResponse;
-import com.springbeans.cafemenumanagement.question.dto.QuestionPreviewResponse;
-import com.springbeans.cafemenumanagement.question.dto.QuestionSaveResponse;
+import com.springbeans.cafemenumanagement.question.dto.*;
 import com.springbeans.cafemenumanagement.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,5 +47,16 @@ public class QuestionApiController {
         QuestionDetailResponse response = questionService.getQuestion(questionId, email);
 
         return ResponseEntity.ok(response);
+    }
+
+    // 본인 문의 삭제
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<Void> deleteQuestion(
+            @PathVariable Long questionId,
+            @RequestBody QuestionAuthRequest request
+    ) {
+        questionService.delete(questionId, request);
+
+        return ResponseEntity.noContent().build();
     }
 }
