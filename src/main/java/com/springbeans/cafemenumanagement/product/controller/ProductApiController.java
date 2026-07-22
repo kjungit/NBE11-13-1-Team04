@@ -88,7 +88,7 @@ public class ProductApiController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("categoty/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(
             @PathVariable String category
     ) {
