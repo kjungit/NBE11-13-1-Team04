@@ -403,9 +403,6 @@ body {
 /* 버튼 클릭 시 눌림 효과 */
 .btn-logout:active {
     transform: translateY(1px);
-<<<<<<< Updated upstream
-}
-=======
 }/* Warning Button */
 .btn-warning {
     background-color: #ed8936;
@@ -455,4 +452,3 @@ body {
 .btn-success:hover {
     background: #1b5e20;
 }
->>>>>>> Stashed changes
