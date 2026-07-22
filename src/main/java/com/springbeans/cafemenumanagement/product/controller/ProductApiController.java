@@ -88,9 +88,9 @@ public class ProductApiController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
             }
     )
-    @GetMapping("/category/{category}")
+    @GetMapping("/category")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(
-            @PathVariable String category
+            @RequestParam String category
     ) {
         try {
             return productService.getByCategory(category);

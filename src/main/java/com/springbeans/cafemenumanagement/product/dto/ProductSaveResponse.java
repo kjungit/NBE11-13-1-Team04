@@ -1,4 +1,4 @@
-package com.springbeans.cafemenumanagement.admin.product.dto;
+package com.springbeans.cafemenumanagement.product.dto;
 
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;

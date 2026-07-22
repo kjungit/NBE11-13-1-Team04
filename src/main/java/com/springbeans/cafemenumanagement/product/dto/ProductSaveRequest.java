@@ -1,11 +1,10 @@
-package com.springbeans.cafemenumanagement.admin.product.dto;
+package com.springbeans.cafemenumanagement.product.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
 
 public record ProductSaveRequest(
@@ -31,4 +30,12 @@ public record ProductSaveRequest(
         @Schema(description = "상품 수량", example = "1", defaultValue = "10")
         Integer stock
 ){
+        public ProductSaveRequest(String name, Integer price, String category, MultipartFile image, Integer stock) {
+                this.name = name;
+                this.price = price;
+                this.category = category;
+                this.image = image;
+                // stock이 null로 들어오면 10으로 대체하여 저장
+                this.stock = (stock == null) ? 10 : stock;
+        }
 }
