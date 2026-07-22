@@ -27,7 +27,7 @@ public class AdminOrderApiController {
             List<AdminOrderListResponse> response = adminOrderService.getOrders(condition);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace(); // 인텔리제이 콘솔에 진짜 원인 에러 출력
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }
