@@ -158,9 +158,20 @@ async function handleFormSubmit(event) {
     formData.append("category", document.getElementById("productCategory").value.trim());
     formData.append("price", document.getElementById("productPrice").value);
 
-    const imageFile = document.getElementById("productImage").files[0];
+    const imageInput = document.getElementById("productImage");
+    const imageFile = imageInput.files[0];
+
     if (imageFile) {
+        // 1. 새 이미지를 첨부한 경우: 파일 객체 전송
         formData.append("image", imageFile);
+    } else if (isEdit) {
+        // optional chaining(?.)을 사용해 요소가 없어도 에러로 튕기지 않게 방어
+        const existingFilePathInput = document.getElementById("existingFilePath");
+        const existingFilePath = existingFilePathInput ? existingFilePathInput.value : null;
+
+        if (existingFilePath) {
+            formData.append("filePath", existingFilePath);
+        }
     }
 
     const url = isEdit ? `${API_BASE_URL}/${productId}` : API_BASE_URL;
@@ -169,7 +180,6 @@ async function handleFormSubmit(event) {
     try {
         const response = await fetch(url, {
             method: method,
-            // multipart/form-data 요청 시 Content-Type 헤더를 명시적으로 설정하지 않음 (브라우저가 boundary 자동 설정)
             body: formData
         });
 
