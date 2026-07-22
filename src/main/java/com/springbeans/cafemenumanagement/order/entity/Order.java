@@ -39,6 +39,7 @@ public class Order {
     private LocalDateTime orderedAt;
 
 
+    @Builder.Default
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,

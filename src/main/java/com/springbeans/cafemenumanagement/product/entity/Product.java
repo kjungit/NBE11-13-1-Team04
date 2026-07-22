@@ -39,7 +39,7 @@ public class Product {
     @Column
     LocalDateTime updatedAt;
 
-    @Column(nullable = false)
+    @Column
     private int stock;
 
     public void update(String name, Integer price, String category, String filePath, boolean isActive) {
@@ -51,6 +51,10 @@ public class Product {
         updatedAt = LocalDateTime.now();
     }
 
+
+    public boolean hasEnoughStock(int quantity) {
+        return this.stock >= quantity;
+    }
 
     public void decreaseStock(int quantity) {
 
