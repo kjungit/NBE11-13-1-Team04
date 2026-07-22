@@ -12,14 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/questions")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AnswerApiController {
 
     private final AnswerService answerService;
 
     // 관리자 답변 등록
-    @PostMapping("/{questionId}/answers")
+    @PostMapping("/questions/{questionId}/answers")
     public ResponseEntity<AnswerSaveResponse> create(
             @PathVariable Long questionId,
             @RequestBody AnswerSaveRequest request,
@@ -47,5 +47,15 @@ public class AnswerApiController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    // 관리자 답변 삭제
+    @DeleteMapping("/answers/{answerId}")
+    public ResponseEntity<Void> deleteAnswer(
+            @PathVariable Long answerId
+    ) {
+        answerService.delete(answerId);
+
+        return ResponseEntity.noContent().build();
     }
 }
