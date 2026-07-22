@@ -26,11 +26,11 @@ public class AdminQuestionApiController {
     }
 
     // 관리자 문의 상세 조회
-    @GetMapping("/{id}")
+    @GetMapping("/{questionId}")
     public ResponseEntity<AdminQuestionDetailResponse> getQuestion(
-            @PathVariable Long id
+            @PathVariable Long questionId
     ) {
-        AdminQuestionDetailResponse response = questionService.getAdminQuestion(id);
+        AdminQuestionDetailResponse response = questionService.getAdminQuestion(questionId);
 
         return ResponseEntity.ok(response);
     }

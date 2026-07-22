@@ -42,12 +42,12 @@ public class QuestionApiController {
     }
 
     // 본인 문의 상세 조회
-    @GetMapping("/{id}")
+    @GetMapping("/{questionId}")
     public ResponseEntity<QuestionDetailResponse> getQuestion(
-            @PathVariable Long id,
+            @PathVariable Long questionId,
             @RequestParam String email
     ) {
-        QuestionDetailResponse response = questionService.getQuestion(id, email);
+        QuestionDetailResponse response = questionService.getQuestion(questionId, email);
 
         return ResponseEntity.ok(response);
     }

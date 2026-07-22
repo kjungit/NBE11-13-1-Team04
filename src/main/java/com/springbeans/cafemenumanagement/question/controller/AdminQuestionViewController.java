@@ -17,13 +17,13 @@ public class AdminQuestionViewController {
     }
 
     // 관리자 문의 상세 및 답변 작성 화면
-    @GetMapping("/{id}")
+    @GetMapping("/{questionId}")
     public String detailForm(
-            @PathVariable Long id,
+            @PathVariable Long questionId,
             Model model
     ) {
         // 화면에서 상세 조회와 답변 등록에 사용할 문의 ID 전달
-        model.addAttribute("questionId", id);
+        model.addAttribute("questionId", questionId);
 
         return "admin/question/admin-question-detail";
     }
