@@ -33,9 +33,15 @@ public class AdminViewController {
         return "admin/admin-order-detail";
     }
 
-    // 상품 관리 페이지 (추가)
+    // 상품 관리 페이지
     @GetMapping("/products")
     public String productListPage() {
         return "admin/admin-products";
+    }
+
+    // 통계 페이지
+    @GetMapping("/sales")
+    public String salesStatPage() {
+        return "admin/admin-sales";
     }
 }
