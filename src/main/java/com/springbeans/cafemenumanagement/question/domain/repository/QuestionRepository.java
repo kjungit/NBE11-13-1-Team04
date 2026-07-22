@@ -7,4 +7,6 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findByEmailOrderByCreatedAtDesc(String email);
+    // 정렬
+    List<Question> findAllByOrderByCreatedAtDesc();
 }
