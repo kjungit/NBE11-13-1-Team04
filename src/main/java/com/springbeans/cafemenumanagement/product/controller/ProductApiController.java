@@ -21,96 +21,111 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("api/products")
 public class ProductApiController {
     @Autowired
     private ProductService productService;
 
     @Operation(summary = "상품 등록", description = "상품 정보를 등록합니다.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "상품 등록 성공",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ProductSaveResponse.class)
-                    )
-            ),
-            @ApiResponse(responseCode = "400", description = "요청값 검증 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "상품 등록 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ProductSaveResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "요청값 검증 실패"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            }
+    )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProductSaveResponse> addProduct(@Valid @ModelAttribute ProductSaveRequest request) throws IOException {
+    public ResponseEntity<ProductSaveResponse> addProduct( @Valid @ModelAttribute ProductSaveRequest request ) throws IOException {
         return productService.save(request);
     }
 
 
     @Operation(summary = "상품 단건 조회")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "상품 조회 성공",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema =  @Schema(implementation = ProductResponse.class)
-                    )
-            ),
-            @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "상품 조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ProductResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProduct(
             @Parameter(description = "조회할 상품 ID", example = "1")
             @PathVariable Long id
-    ) {
+                                                     ) {
         return productService.get(id);
     }
 
     @Operation(summary = "상품 전체 조회")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "전체 상품 조회 성공",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = ProductResponse.class)
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "전체 상품 조회 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = ProductResponse.class)
+                                    )
                             )
-                    )
-            ),
-            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
-    })
+                    ),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+            }
+    )
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() throws IOException {
-        return productService.getAll();
+        try {
+            return productService.getAll();
+        } catch (Exception e) {
+            e.printStackTrace(); // 인텔리제이 콘솔에 진짜 원인 에러 출력
+            return ResponseEntity.internalServerError().build(); // 500 Internal Server Error 반환
+        }
     }
 
     @Operation(summary = "상품 수정")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "상품 수정 성공",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ProductSaveResponse.class)
-                    )
-            ),
-            @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "상품 수정 성공",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ProductSaveResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            }
+    )
     @PostMapping("/{id}")
-    public ResponseEntity<ProductSaveResponse> updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductSaveRequest request) throws IOException {
+    public ResponseEntity<ProductSaveResponse> updateProduct( @PathVariable Long id, @Valid @ModelAttribute ProductSaveRequest request ) throws IOException {
         return productService.update(id, request);
     }
 
     @Operation(summary = "상품 삭제")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
-            @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
+                    @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            }
+    )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@RequestParam Long id) throws IOException {
+    public ResponseEntity<Void> deleteProduct( @PathVariable Long id ) throws IOException {
         return productService.delete(id);
     }
 }
