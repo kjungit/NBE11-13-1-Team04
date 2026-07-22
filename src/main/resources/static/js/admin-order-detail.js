@@ -1,9 +1,12 @@
+// 현재 화면의 orderId 저장용 글로벌 변수
+let currentOrderId = null;
+
 document.addEventListener("DOMContentLoaded", () => {
-    // URL Path (/admin/orders/{orderId})에서 orderId 추출
     const pathParts = window.location.pathname.split("/");
     const orderId = pathParts[pathParts.length - 1];
 
     if (orderId && !isNaN(orderId)) {
+        currentOrderId = orderId;
         fetchOrderDetail(orderId);
     }
 });
@@ -34,6 +37,11 @@ function renderOrderDetail(data) {
     statusElem.textContent = data.statusDescription;
     statusElem.className = `status-badge ${getStatusBadgeClass(data.status)}`;
 
+    // ----------------------------------------------------
+    // 💡 [추가] 주문 상태별 Action 버튼 영역 동적 렌더링
+    // ----------------------------------------------------
+    renderActionButtons(data.status);
+
     // 상품 목록 렌더링
     const tbody = document.getElementById("detailItemTableBody");
     tbody.innerHTML = "";
@@ -54,6 +62,89 @@ function renderOrderDetail(data) {
         `;
         tbody.appendChild(tr);
     });
+}
+
+/**
+ * 주문 상태에 따른 버튼 생성 함수
+ * HTML 상에 <div id="actionButtonContainer"></div> 요소가 정의되어 있어야 합니다.
+ */
+function renderActionButtons(status) {
+    const container = document.getElementById("actionButtonContainer");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (status === "CANCEL_REQUESTED") {
+        // 취소 요청 상태 -> [취소 승인], [취소 거절] 버튼 노출
+        container.innerHTML = `
+            <button type="button" class="btn-success" onclick="approveCancel()">취소 승인</button>
+            <button type="button" class="btn-warning" onclick="rejectCancel()">취소 거절</button>
+        `;
+    } else if (status === "ORDERED") {
+        // 미확정/주문 확정 상태 -> [관리자 직접 취소] 버튼 노출
+        container.innerHTML = `
+            <button type="button" class="btn-warning" onclick="cancelOrder()">직접 취소</button>
+        `;
+    }
+    // 이미 CANCELED 인 경우에는 버튼을 노출하지 않음
+}
+
+// ==========================================================================
+// 💡 [추가] API 연동 처리 함수들
+// ==========================================================================
+
+// 1. 취소 승인
+async function approveCancel() {
+    if (!confirm("해당 주문의 취소 요청을 승인하시겠습니까?")) return;
+
+    try {
+        const response = await fetch(`/api/admin/orders/${currentOrderId}/cancel-approve`, {
+            method: "PATCH"
+        });
+        if (!response.ok) throw new Error("취소 승인 처리에 실패했습니다.");
+
+        alert("취소 요청이 승인되었습니다.");
+        fetchOrderDetail(currentOrderId); // 상세 정보 재조회
+    } catch (error) {
+        console.error("Approve Cancel Error:", error);
+        alert(error.message);
+    }
+}
+
+// 2. 취소 거절
+async function rejectCancel() {
+    if (!confirm("해당 주문의 취소 요청을 거절하시겠습니까?")) return;
+
+    try {
+        const response = await fetch(`/api/admin/orders/${currentOrderId}/cancel-reject`, {
+            method: "PATCH"
+        });
+        if (!response.ok) throw new Error("취소 거절 처리에 실패했습니다.");
+
+        alert("취소 요청이 거절되었습니다.");
+        fetchOrderDetail(currentOrderId);
+    } catch (error) {
+        console.error("Reject Cancel Error:", error);
+        alert(error.message);
+    }
+}
+
+// 3. 관리자 직접 취소
+async function cancelOrder() {
+    if (!confirm("관리자 권한으로 이 주문을 직접 취소하시겠습니까?")) return;
+
+    try {
+        const response = await fetch(`/api/admin/orders/${currentOrderId}/cancel`, {
+            method: "PATCH"
+        });
+        if (!response.ok) throw new Error("주문 취소 처리에 실패했습니다.");
+
+        alert("주문이 성공적으로 취소되었습니다.");
+        fetchOrderDetail(currentOrderId);
+    } catch (error) {
+        console.error("Cancel Order Error:", error);
+        alert(error.message);
+    }
 }
 
 function getStatusBadgeClass(status) {

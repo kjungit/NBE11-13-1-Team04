@@ -2,6 +2,7 @@ package com.springbeans.cafemenumanagement.admin.order.service;
 
 import com.springbeans.cafemenumanagement.admin.order.domain.entity.Order;
 import com.springbeans.cafemenumanagement.admin.order.domain.entity.OrderProduct;
+import com.springbeans.cafemenumanagement.admin.order.domain.entity.OrderStatus;
 import com.springbeans.cafemenumanagement.admin.order.domain.repository.OrderRepository;
 import com.springbeans.cafemenumanagement.admin.order.dto.AdminOrderDetailResponse;
 import com.springbeans.cafemenumanagement.admin.order.dto.AdminOrderListResponse;
@@ -88,6 +89,37 @@ public class AdminOrderService {
                 amount,
                 price * amount
         );
+    }
+
+    @Transactional
+    public void approveCancelOrder( Long orderId ) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. id: " + orderId));
+
+        if (order.getStatus() != OrderStatus.CANCEL_REQUESTED) {
+            throw new IllegalArgumentException("취소 요청 상태의 주문만 승인할 수 있습니다.");
+        }
+
+        order.cancel();
+    }
+
+    @Transactional
+    public void rejectCancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
+
+        order.rejectCancel();
+    }
+
+    @Transactional
+    public void cancelOrder( Long orderId ) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
+
+        if(order.getStatus() == OrderStatus.CONFIRMED) {
+            new IllegalArgumentException("확정된 주문은 취소할 수 없습니다.");
+        }
+        order.cancel();
     }
 
 }
