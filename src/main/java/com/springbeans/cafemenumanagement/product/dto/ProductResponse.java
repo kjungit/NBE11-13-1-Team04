@@ -2,6 +2,7 @@ package com.springbeans.cafemenumanagement.product.dto;
 
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 
 public record ProductResponse(
 
