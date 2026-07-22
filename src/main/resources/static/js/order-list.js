@@ -45,7 +45,7 @@ function renderOrderList(orders) {
             <td>${getStatusBadge(order.status)}</td>
             <td>${formattedDate}</td>
             <td>
-                <button class="btn-outline btn-sm" onclick="location.href='/orders/detail/${order.orderId}'">상세보기</button>
+                <button class="btn-outline btn-sm" onclick="location.href='/orders/${order.orderId}'">상세보기</button>
             </td>
         `;
         tbody.appendChild(tr);
