@@ -39,6 +39,9 @@ public class Answer {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
     private Answer(
             Question question,
             String content,
@@ -48,6 +51,7 @@ public class Answer {
         this.content = content;
         this.admin = admin;
         this.createdAt = LocalDateTime.now();
+        this.isActive = true;
     }
 
     public static Answer create(
@@ -56,5 +60,10 @@ public class Answer {
             Admin admin
     ) {
         return new Answer(question, content, admin);
+    }
+
+    // 답변 비활성화
+    public void deactivate() {
+        this.isActive = false;
     }
 }

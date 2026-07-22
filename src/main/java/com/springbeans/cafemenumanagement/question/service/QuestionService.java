@@ -40,8 +40,9 @@ public class QuestionService {
 
     public List<QuestionPreviewResponse> getQuestions(String email) {
 
-        // 이메일로 본인 문의 목록 조회
-        return questionRepository.findByEmailOrderByCreatedAtDesc(email)
+        // 이메일로 본인의 활성 문의 목록 조회
+        return questionRepository
+                .findByEmailAndIsActiveTrueOrderByCreatedAtDesc(email)
                 .stream()
                 .map(QuestionPreviewResponse::from)
                 .toList();
@@ -55,8 +56,8 @@ public class QuestionService {
             throw new IllegalArgumentException("이메일은 필수입니다.");
         }
 
-        // 문의 조회
-        Question question = questionRepository.findById(id)
+        // 활성 문의 조회
+        Question question = questionRepository.findByIdAndIsActiveTrue(id)
                 // TODO : 문의 관련 커스텀 예외 적용
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문의입니다."));
 
@@ -66,8 +67,8 @@ public class QuestionService {
             throw new IllegalArgumentException("문의 조회 권한이 없습니다.");
         }
 
-        // 답변 조회 (없으면 null)
-        AnswerDetailResponse answer = answerRepository.findByQuestionId(id)
+        // 활성 답변 조회 (없으면 null)
+        AnswerDetailResponse answer = answerRepository.findByQuestionIdAndIsActiveTrue(id)
                 .map(AnswerDetailResponse::from)
                 .orElse(null);
 
@@ -77,8 +78,9 @@ public class QuestionService {
 
     public List<AdminQuestionPreviewResponse> getAdminQuestions() {
 
-        // 관리자 전체 문의 조회
-        return questionRepository.findAllByOrderByCreatedAtDesc()
+        // 관리자 전체 활성 문의 조회
+        return questionRepository
+                .findAllByIsActiveTrueOrderByCreatedAtDesc()
                 .stream()
                 .map(AdminQuestionPreviewResponse::from)
                 .toList();
@@ -86,13 +88,13 @@ public class QuestionService {
 
     public AdminQuestionDetailResponse getAdminQuestion(Long id) {
 
-        // 문의 조회
-        Question question = questionRepository.findById(id)
-                // TODO : GlobalExceptionHandler 적용 후 커스텀 예외로 변경
+        // 활성 문의 조회
+        Question question = questionRepository.findByIdAndIsActiveTrue(id)
+                // TODO : 문의 관련 커스텀 예외 적용
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문의입니다."));
 
-        // 답변 조회 (없으면 null)
-        AnswerDetailResponse answer = answerRepository.findByQuestionId(id)
+        // 활성 답변 조회 (없으면 null)
+        AnswerDetailResponse answer = answerRepository.findByQuestionIdAndIsActiveTrue(id)
                 .map(AnswerDetailResponse::from)
                 .orElse(null);
 
@@ -100,19 +102,57 @@ public class QuestionService {
         return AdminQuestionDetailResponse.from(question, answer);
     }
 
+    @Transactional
+    public void delete(Long questionId, QuestionAuthRequest request) {
+
+        // 삭제 요청값 검증
+        if (request == null
+                || request.email() == null
+                || request.email().isBlank()) {
+            // TODO : 문의 관련 커스텀 예외 적용
+            throw new IllegalArgumentException("이메일은 필수입니다.");
+        }
+
+        // 활성 문의 조회
+        Question question =
+                questionRepository.findByIdAndIsActiveTrue(questionId)
+                        // TODO : 문의 관련 커스텀 예외 적용
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("존재하지 않는 문의입니다.")
+                        );
+
+        // 문의 작성자 확인
+        if (!question.getEmail().equals(request.email())) {
+            // TODO : 문의 관련 커스텀 예외 적용
+            throw new IllegalArgumentException("문의 삭제 권한이 없습니다.");
+        }
+
+        // 연결된 활성 답변이 있으면 함께 비활성화
+        answerRepository.findByQuestionIdAndIsActiveTrue(questionId)
+                .ifPresent(answer -> answer.deactivate());
+
+        // 문의 비활성화
+        question.deactivate();
+    }
+
     private void validateCreateRequest(QuestionCreateRequest request) {
 
-        // TODO : GlobalExceptionHandler 적용 후 커스텀 예외로 변경
+        // TODO : 문의 관련 커스텀 예외 적용
+        if (request == null) {
+            throw new IllegalArgumentException("문의 등록 요청은 필수입니다.");
+        }
+
+        // TODO : 문의 관련 커스텀 예외 적용
         if (request.email() == null || request.email().isBlank()) {
             throw new IllegalArgumentException("이메일은 필수입니다.");
         }
 
-        // TODO : GlobalExceptionHandler 적용 후 커스텀 예외로 변경
+        // TODO : 문의 관련 커스텀 예외 적용
         if (request.title() == null || request.title().isBlank()) {
             throw new IllegalArgumentException("제목은 필수입니다.");
         }
 
-        // TODO : GlobalExceptionHandler 적용 후 커스텀 예외로 변경
+        // TODO : 문의 관련 커스텀 예외 적용
         if (request.content() == null || request.content().isBlank()) {
             throw new IllegalArgumentException("문의 내용은 필수입니다.");
         }

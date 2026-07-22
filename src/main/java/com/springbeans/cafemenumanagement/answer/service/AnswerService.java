@@ -31,14 +31,14 @@ public class AnswerService {
         // 답변 등록 요청값 검증
         validateCreateRequest(request);
 
-        // 답변을 등록할 문의 조회
-        Question question = questionRepository.findById(questionId)
+        // 활성 문의 조회
+        Question question = questionRepository.findByIdAndIsActiveTrue(questionId)
                 // TODO : 문의 관련 커스텀 예외 적용
                 .orElseThrow(() ->
                         new IllegalArgumentException("존재하지 않는 문의입니다.")
                 );
 
-        // 한 문의에는 답변을 하나만 등록할 수 있도록 중복 확인
+        // 해당 문의에 답변 데이터가 이미 있는지 확인
         if (answerRepository.existsByQuestionId(questionId)) {
             // TODO : 답변 관련 커스텀 예외 적용
             throw new IllegalArgumentException("이미 답변이 등록된 문의입니다.");
@@ -66,6 +66,23 @@ public class AnswerService {
 
         // 저장된 답변 정보 반환
         return AnswerSaveResponse.from(answer);
+    }
+
+    @Transactional
+    public void delete(Long answerId) {
+
+        // 활성 답변 조회
+        Answer answer = answerRepository.findByIdAndIsActiveTrue(answerId)
+                // TODO : 답변 관련 커스텀 예외 적용
+                .orElseThrow(() ->
+                        new IllegalArgumentException("존재하지 않는 답변입니다.")
+                );
+
+        // 답변 비활성화
+        answer.deactivate();
+
+        // 연결된 문의 상태를 답변 대기로 변경
+        answer.getQuestion().markAsWaiting();
     }
 
     private void validateCreateRequest(AnswerSaveRequest request) {

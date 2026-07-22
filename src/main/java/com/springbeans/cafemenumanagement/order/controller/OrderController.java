@@ -8,6 +8,7 @@ import com.springbeans.cafemenumanagement.order.dto.response.OrderSummaryRespons
 import com.springbeans.cafemenumanagement.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +58,15 @@ public class OrderController {
     ) {
         return orderService.getOrder(orderId);
     }
+//    public ResponseEntity<OrderDetailResponse> getOrder(
+//            @PathVariable Long orderId
+//                                                       ) {
+//        try {
+//            return ResponseEntity.ok(orderService.getOrder(orderId));
+//        } catch (Exception e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     /**
      * 주문 취소 요청

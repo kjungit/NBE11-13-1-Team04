@@ -56,6 +56,7 @@ public class AdminOrderService {
                 order.getStatus(),
                 statusDesc,
                 order.getOrderedAt(),
+                order.getConfirmedAt(),
                 totalAmount,
                 totalPrice
         );
