@@ -4,6 +4,7 @@ import com.springbeans.cafemenumanagement.order.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,5 +17,9 @@ public interface OrderRepository
             LocalDateTime start,
             LocalDateTime end
     );
+
+    List<Order> findByEmailOrderByOrderedAtDesc(String email);
+
+    List<Order> findAllByOrderByOrderedAtDesc();
 
 }

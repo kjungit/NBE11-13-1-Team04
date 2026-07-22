@@ -2,15 +2,17 @@ package com.springbeans.cafemenumanagement.order.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
 public class PageController {
 
     @GetMapping("/")
     public String home() {
+        return "order-list";
+    }
+
+    @GetMapping("/orders/new")
+    public String createPage() {
         return "order-create";
     }
 
@@ -19,10 +21,12 @@ public class PageController {
         return "order-list";
     }
 
-    @GetMapping("/orders/detail/{orderId}")
-    public String detailPage(@PathVariable Long orderId) {
+    @GetMapping("/orders/detail")
+    public String detailPage() {
         return "order-detail";
     }
-
-
+    @GetMapping("/orders/my")
+    public String myOrdersPage() {
+        return "order-my";
+    }
 }

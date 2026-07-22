@@ -27,16 +27,26 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public OrderCreateResponse createOrder(
             @RequestBody OrderCreateRequest request
-                                          ) {
+    ) {
         return orderService.createOrder(request);
     }
 
     /**
-     * 주문 목록 조회
+     * 주문 목록 조회 (전체)
      */
     @GetMapping
     public List<OrderSummaryResponse> getOrders() {
         return orderService.getOrders();
+    }
+
+    /**
+     * 이메일로 본인 주문 내역만 조회
+     */
+    @GetMapping("/mine")
+    public List<OrderSummaryResponse> getMyOrders(
+            @RequestParam String email
+    ) {
+        return orderService.getOrdersByEmail(email);
     }
 
     /**
@@ -45,7 +55,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public OrderDetailResponse getOrder(
             @PathVariable Long orderId
-                                       ) {
+    ) {
         return orderService.getOrder(orderId);
     }
 //    public ResponseEntity<OrderDetailResponse> getOrder(
@@ -64,7 +74,7 @@ public class OrderController {
     @PatchMapping("/{orderId}/cancel")
     public OrderCancelResponse requestCancel(
             @PathVariable Long orderId
-                                            ) {
+    ) {
         return orderService.requestCancel(orderId);
     }
 }
