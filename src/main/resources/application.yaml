@@ -8,12 +8,25 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
       hibernate:
-        ddl-auto: update
-      open-in-view: false
-      properties:
-        hibernate:
-          format_sql: true
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 file:
   upload-dir: ./uploads/products
+
+logging:
+  level:
+    com:
+      example:
+        product:
+            DEBUG
