@@ -111,7 +111,7 @@ public class ProductApiController {
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             }
     )
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductSaveResponse> updateProduct( @PathVariable Long id, @Valid @ModelAttribute ProductSaveRequest request ) throws IOException {
         return productService.update(id, request);
     }
