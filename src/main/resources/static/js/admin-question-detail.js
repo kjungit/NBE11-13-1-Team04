@@ -1,4 +1,5 @@
 let currentQuestionId = null;
+let currentAnswerId = null; // 1. 삭제 호출 시 사용할 답변 ID 저장용 변수 추가
 
 document.addEventListener("DOMContentLoaded", () => {
     // Path: /admin/questions/{questionId}
@@ -38,16 +39,51 @@ function renderDetail(data) {
     document.getElementById("questionCreatedAt").innerText = data.createdAt ? new Date(data.createdAt).toLocaleString() : "-";
     document.getElementById("questionStatus").innerHTML = getStatusBadge(data.status);
 
-    // 이미 등록된 답변이 존재하는 경우
+    // 2. 이미 등록된 답변이 존재하는 경우 처리
     if (data.answer) {
-        document.getElementById("answerContent").value = data.answer.content || data.answer.comment || "";
-        document.getElementById("btnSubmitAnswer").innerText = "답변 수정";
+        // 백엔드 객체 구조에 맞춰 answerId 추출 (id 또는 answerId)
+        currentAnswerId = data.answer.id || data.answer.answerId;
+
+        const answerInput = document.getElementById("answerContent");
+        answerInput.value = data.answer.content || data.answer.comment || "";
+        answerInput.readOnly = true; // 삭제 전용 상태이므로 수정 불가능하게 비활성화
+
+        const btnSubmit = document.getElementById("btnSubmitAnswer");
+        btnSubmit.innerText = "답변 삭제";
+        btnSubmit.className = "btn-warning"; // 기존에 추가한 주황/경고 버튼 스타일로 변경
     }
 }
 
 async function handleSaveAnswer(event) {
     event.preventDefault();
 
+    // 3. 이미 등록된 답변이 존재하는 경우 -> DELETE 요청 수행
+    if (currentAnswerId) {
+        if (!confirm("등록된 답변을 정말 삭제하시겠습니까?")) {
+            return;
+        }
+
+        try {
+            // 컨트롤러 엔드포인트: @DeleteMapping("/answers/{answerId}") -> /api/admin/answers/{answerId}
+            const response = await fetch(`/api/admin/answers/${currentAnswerId}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => null);
+                throw new Error(err?.message || "답변 삭제 중 오류가 발생했습니다.");
+            }
+
+            alert("답변이 성공적으로 삭제되었습니다.");
+            location.href = "/admin/questions";
+        } catch (error) {
+            console.error("Delete Answer Error:", error);
+            alert(error.message);
+        }
+        return;
+    }
+
+    // 4. 답변이 없는 경우 -> 기존 POST 요청 (등록) 수행
     const content = document.getElementById("answerContent").value.trim();
     if (!content) {
         alert("답변 내용을 입력해주세요.");
@@ -55,7 +91,6 @@ async function handleSaveAnswer(event) {
     }
 
     try {
-        // 백엔드 답변 작성 API 엔드포인트에 맞게 호출
         const response = await fetch(`/api/admin/questions/${currentQuestionId}/answers`, {
             method: "POST",
             headers: {

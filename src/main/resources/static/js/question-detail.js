@@ -42,6 +42,14 @@ function renderDetail(data) {
     document.getElementById("questionCreatedAt").innerText = data.createdAt ? new Date(data.createdAt).toLocaleString() : "";
     document.getElementById("questionStatus").innerHTML = getStatusBadge(data.status);
 
+    // ★ 답변 완료(ANSWERED) 상태일 경우 삭제 버튼 숨기기
+    const deleteBtn = document.getElementById("deleteBtn");
+    if (data.status === "ANSWERED") {
+        deleteBtn.style.display = "none";
+    } else {
+        deleteBtn.style.display = "inline-block"; // 대기 중일 때는 표시
+    }
+
     if (data.answer) {
         document.getElementById("answerContainer").style.display = "block";
         document.getElementById("answerContent").innerText = data.answer.content || data.answer.comment || "";

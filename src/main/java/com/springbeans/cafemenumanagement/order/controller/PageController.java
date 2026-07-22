@@ -22,7 +22,7 @@ public class PageController {
         return "order-list";
     }
 
-    @GetMapping("/orders/detail/{orderId}")
+    @GetMapping("/orders/{orderId}")
     public String detailPage( @PathVariable Long orderId ) {
         return "order-detail";
     }
