@@ -526,3 +526,21 @@ input[type="email"]:focus,
     color: #868e96;
     margin-top: 2px;
 }
+.product-item-card .stock {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+/* 품절 시 강조 스타일 */
+.product-item-card .stock.out-of-stock {
+    color: #e53e3e;
+    font-weight: bold;
+}
+
+/* 비활성화된 버튼 스타일 */
+button:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+    border-color: #ccc !important;
+}
