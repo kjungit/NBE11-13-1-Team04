@@ -16,9 +16,10 @@
       <a href="/admin/orders">주문 관리</a>
       <a href="/admin/sales">매출 및 통계</a>
       <a href="/admin/questions">1:1 문의 관리</a>
-    </nav>    <div class="sidebar-footer" style="padding: 20px;">
-    <button class="btn-logout" onclick="logout()">로그아웃</button>
-  </div>
+    </nav>
+    <div class="sidebar-footer" style="padding: 20px;">
+      <button class="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
   </aside>
 
   <!-- Main Content -->
@@ -55,8 +56,9 @@
           <th style="width: 60px;">ID</th>
           <th style="width: 80px;">이미지</th>
           <th>상품명</th>
-          <th style="width: 140px;">카테고리</th>
-          <th style="width: 120px;">가격</th>
+          <th style="width: 120px;">카테고리</th>
+          <th style="width: 110px;">가격</th>
+          <th style="width: 90px;">재고 수량</th> <!-- 👈 추가된 헤더 -->
           <th style="width: 140px;">관리</th>
         </tr>
         </thead>
@@ -84,14 +86,20 @@
         <input type="text" id="productName" name="name" class="form-select" style="width: 100%;" maxlength="50" placeholder="예: 에티오피아 게이샤 100g" required>
       </div>
 
+      <div class="form-group">
+        <label for="productCategory" class="detail-label">카테고리 <span style="color: #e53e3e;">*</span></label>
+        <input type="text" id="productCategory" name="category" class="form-select" style="width: 100%;" maxlength="50" placeholder="예: 커피 원두" required>
+      </div>
+
+      <!-- 👇 가격과 재고 수량을 한 줄에 배치 -->
       <div style="display: flex; gap: 12px;">
-        <div class="form-group" style="flex: 1;">
-          <label for="productCategory" class="detail-label">카테고리 <span style="color: #e53e3e;">*</span></label>
-          <input type="text" id="productCategory" name="category" class="form-select" style="width: 100%;" maxlength="50" placeholder="예: 커피 원두" required>
-        </div>
         <div class="form-group" style="flex: 1;">
           <label for="productPrice" class="detail-label">가격 (원) <span style="color: #e53e3e;">*</span></label>
           <input type="number" id="productPrice" name="price" class="form-select" style="width: 100%;" min="0" placeholder="40000" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="productStock" class="detail-label">재고 수량 <span style="color: #e53e3e;">*</span></label>
+          <input type="number" id="productStock" name="stock" class="form-select" style="width: 100%;" min="0" placeholder="100" required>
         </div>
       </div>
 

@@ -16,7 +16,7 @@ async function fetchProducts(endpoint = API_BASE_URL) {
             headers: {
                 "Accept": "application/json"
             },
-            credentials: "include" // 👈 세션 쿠키 전송 필수!
+            credentials: "include"
         });
         if (!response.ok) {
             throw new Error("상품 목록을 불러오는 데 실패했습니다.");
@@ -34,18 +34,18 @@ function renderProductTable(products) {
     tbody.innerHTML = "";
 
     if (!products || products.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">조회된 상품이 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">조회된 상품이 없습니다.</td></tr>`;
         return;
     }
 
     products.forEach(product => {
         const tr = document.createElement("tr");
         const formattedPrice = product.price ? product.price.toLocaleString() + "원" : "0원";
+        const stockCount = product.stock !== undefined && product.stock !== null ? product.stock.toLocaleString() + "개" : "0개";
 
         tr.innerHTML = `
             <td>${product.id}</td>
             <td>
-                <!-- 👇 기존 <img> 태그를 이 코드(placehold.co + onerror=null)로 교체하시면 됩니다! -->
                 <img src="${product.filePath || 'https://placehold.co/50x50?text=No+Img'}" 
                      alt="${product.name}" 
                      class="product-img-thumb" 
@@ -54,6 +54,7 @@ function renderProductTable(products) {
             <td><strong>${product.name}</strong></td>
             <td><span class="badge">${product.category}</span></td>
             <td>${formattedPrice}</td>
+            <td>${stockCount}</td> <!-- 👈 수량 표시 추가 -->
             <td>
                 <button class="btn-sm btn-outline" onclick="openEditModal(${product.id})">수정</button>
                 <button class="btn-sm btn-danger" onclick="deleteProduct(${product.id})">삭제</button>
@@ -90,6 +91,7 @@ function resetFilters() {
 function openCreateModal() {
     document.getElementById("productForm").reset();
     document.getElementById("productId").value = "";
+    document.getElementById("productStock").value = ""; // 👈 수량 리셋
     document.getElementById("modalTitle").innerText = "☕ 새 상품 등록";
     document.getElementById("btnSave").innerText = "등록하기";
 
@@ -99,7 +101,7 @@ function openCreateModal() {
 
     document.getElementById("imagePreviewContainer").style.display = "none";
     document.getElementById("imagePreview").src = "";
-    document.getElementById("productModal").classList.add("active");
+    document.getElementById("productModal").style.display = "flex";
 }
 
 function openEditModal(productId) {
@@ -110,6 +112,7 @@ function openEditModal(productId) {
     document.getElementById("productName").value = product.name;
     document.getElementById("productCategory").value = product.category;
     document.getElementById("productPrice").value = product.price;
+    document.getElementById("productStock").value = product.stock ?? 0; // 👈 기존 수량 입력값에 바인딩
 
     // 수정 시 파일 선택 선택사항 처리
     document.getElementById("imageRequiredMark").style.display = "none";
@@ -125,11 +128,11 @@ function openEditModal(productId) {
 
     document.getElementById("modalTitle").innerText = "☕ 상품 수정";
     document.getElementById("btnSave").innerText = "수정하기";
-    document.getElementById("productModal").classList.add("active");
+    document.getElementById("productModal").style.display = "flex";
 }
 
 function closeModal() {
-    document.getElementById("productModal").classList.remove("active");
+    document.getElementById("productModal").style.display = "none";
 }
 
 function previewImage(event) {
@@ -158,15 +161,14 @@ async function handleFormSubmit(event) {
     formData.append("name", document.getElementById("productName").value.trim());
     formData.append("category", document.getElementById("productCategory").value.trim());
     formData.append("price", document.getElementById("productPrice").value);
+    formData.append("stock", document.getElementById("productStock").value); // 👈 stock 데이터 추가
 
     const imageInput = document.getElementById("productImage");
     const imageFile = imageInput.files[0];
 
     if (imageFile) {
-        // 1. 새 이미지를 첨부한 경우: 파일 객체 전송
         formData.append("image", imageFile);
     } else if (isEdit) {
-        // optional chaining(?.)을 사용해 요소가 없어도 에러로 튕기지 않게 방어
         const existingFilePathInput = document.getElementById("existingFilePath");
         const existingFilePath = existingFilePathInput ? existingFilePathInput.value : null;
 
