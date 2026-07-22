@@ -25,4 +25,9 @@ public class PageController {
     public String detailPage() {
         return "order-detail";
     }
+
+    @GetMapping("/orders/my")
+    public String myOrdersPage() {
+        return "order-my";
+    }
 }

@@ -26,7 +26,8 @@ public class CartService {
 
 
     /**
-     * 상품 존재 여부 및 재고 확인
+     * 상품 존재 여부 확인
+     * (재고 부족 여부는 프론트에서 처리하기로 하여 여기서는 체크하지 않음)
      */
     public void check(
             CartOrderRequest request
@@ -42,15 +43,6 @@ public class CartService {
                                                     HttpStatus.NOT_FOUND,
                                                     "상품이 존재하지 않습니다. (상품ID: " + item.getProductId() + ")"
                                             ));
-
-                    if (!product.hasEnoughStock(item.getAmount())) {
-
-                        throw new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "'" + product.getName() + "' 상품의 재고가 부족합니다. 현재 재고: "
-                                        + product.getStock() + "개"
-                        );
-                    }
 
                     System.out.println(
                             "상품ID : "
@@ -76,7 +68,7 @@ public class CartService {
             CartOrderRequest request
     ){
 
-        // 존재 여부 + 재고 검증 먼저 수행
+        // 상품 존재 여부만 먼저 확인
         check(request);
 
         LocalDateTime start =

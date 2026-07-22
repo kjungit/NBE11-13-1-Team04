@@ -75,16 +75,7 @@ public class OrderService {
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다. ID: " + item.productId()));
 
-            // 재고 검증: 부족하면 남은 재고 수량과 함께 알림
-            if (!product.hasEnoughStock(item.amount())) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "'" + product.getName() + "' 상품의 재고가 부족합니다. 현재 재고: "
-                                + product.getStock() + "개"
-                );
-            }
-
-            // 재고 차감 (영속 상태 엔티티라 트랜잭션 커밋 시 자동 반영됨)
+            // 재고 차감 (프론트에서 재고 부족 여부를 미리 검증하므로 여기서는 별도 체크 없이 차감만 수행)
             product.decreaseStock(item.amount());
 
             OrderProduct orderItem = new OrderProduct(
@@ -110,11 +101,27 @@ public class OrderService {
     }
 
     /**
-     * 주문 목록 조회
+     * 주문 목록 조회 (전체, 최신순)
      */
     public List<OrderSummaryResponse> getOrders() {
 
-        return orderRepository.findAll()
+        return orderRepository.findAllByOrderByOrderedAtDesc()
+                .stream()
+                .map(order -> new OrderSummaryResponse(
+                        order.getId(),
+                        order.getEmail(),
+                        order.getStatus(),
+                        order.getOrderedAt()
+                ))
+                .toList();
+    }
+
+    /**
+     * 이메일로 본인 주문 내역만 조회
+     */
+    public List<OrderSummaryResponse> getOrdersByEmail(String email) {
+
+        return orderRepository.findByEmailOrderByOrderedAtDesc(email)
                 .stream()
                 .map(order -> new OrderSummaryResponse(
                         order.getId(),
