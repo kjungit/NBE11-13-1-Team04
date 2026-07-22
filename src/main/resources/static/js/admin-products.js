@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const API_BASE_URL = "/api/products";
+const ADMIN_API_BASE_URL = "/api/admin/products";
 let productList = [];
 
 // ==========================================================================
@@ -174,7 +175,7 @@ async function handleFormSubmit(event) {
         }
     }
 
-    const url = isEdit ? `${API_BASE_URL}/${productId}` : API_BASE_URL;
+    const url = isEdit ? `${ADMIN_API_BASE_URL}/${productId}` : ADMIN_API_BASE_URL;
     const method = isEdit ? "PUT" : "POST";
 
     try {
@@ -204,7 +205,7 @@ async function deleteProduct(productId) {
     if (!confirm("정말 이 상품을 삭제하시겠습니까?")) return;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/${productId}`, {
+        const response = await fetch(`${ADMIN_API_BASE_URL}/${productId}`, {
             method: "DELETE"
         });
 
