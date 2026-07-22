@@ -1,4 +1,5 @@
 let cart = []; // { productId, name, price, amount }
+let productList = []; // 백엔드에서 불러온 상품 목록 저장 (stock 정보 포함)
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
@@ -10,6 +11,8 @@ async function fetchProducts() {
         const response = await fetch("/api/products");
         if (!response.ok) throw new Error("상품 목록을 불러올 수 없습니다.");
         const products = await response.json();
+
+        productList = products; // 원본 상품 목록 저장 (stock 참조용)
         renderProducts(products);
     } catch (error) {
         console.error(error);
@@ -24,23 +27,49 @@ function renderProducts(products) {
     products.forEach(product => {
         const item = document.createElement("div");
         item.className = "product-item-card";
+
+        // 재고 여부 확인
+        const isOutOfStock = product.stock <= 0;
+        const stockText = isOutOfStock ? "품절" : `재고: ${product.stock}개`;
+
         item.innerHTML = `
             <img src="${product.filePath}" alt="${product.name}" onerror="this.src='https://placehold.co/150x150?text=No+Img'">
             <div class="name">${product.name}</div>
             <div class="price">${product.price.toLocaleString()}원</div>
-            <button class="btn-primary btn-sm btn-block" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">담기</button>
+            <div class="stock ${isOutOfStock ? 'out-of-stock' : ''}">${stockText}</div>
+            <button class="btn-primary btn-sm btn-block" 
+                    onclick="addToCart(${product.id})" 
+                    ${isOutOfStock ? 'disabled' : ''}>
+                ${isOutOfStock ? '품절' : '담기'}
+            </button>
         `;
         container.appendChild(item);
     });
 }
 
 // 2. 장바구니 제어
-function addToCart(productId, name, price) {
+function addToCart(productId) {
+    const product = productList.find(p => p.id === productId);
+    if (!product) return;
+
     const existing = cart.find(item => item.productId === productId);
+    const currentAmount = existing ? existing.amount : 0;
+
+    // 재고 수량 초과 검증
+    if (currentAmount + 1 > product.stock) {
+        alert(`재고 수량을 초과했습니다. (남은 재고: ${product.stock}개)`);
+        return;
+    }
+
     if (existing) {
         existing.amount += 1;
     } else {
-        cart.push({ productId, name, price, amount: 1 });
+        cart.push({
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            amount: 1
+        });
     }
     renderCart();
 }
@@ -48,6 +77,15 @@ function addToCart(productId, name, price) {
 function updateCartAmount(productId, delta) {
     const item = cart.find(i => i.productId === productId);
     if (!item) return;
+
+    // 수량 증가(+) 시 재고 수량 초과 검증
+    if (delta > 0) {
+        const product = productList.find(p => p.id === productId);
+        if (product && item.amount + delta > product.stock) {
+            alert(`재고 수량을 초과할 수 없습니다. (남은 재고: ${product.stock}개)`);
+            return;
+        }
+    }
 
     item.amount += delta;
     if (item.amount <= 0) {

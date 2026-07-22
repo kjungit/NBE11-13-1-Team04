@@ -1,12 +1,22 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetchOrders();
-});
+// 폼 제출 핸들러
+async function searchOrders(event) {
+    event.preventDefault();
 
-// API: OrderController - GET /api/orders
-async function fetchOrders() {
+    const emailInput = document.getElementById("searchEmail");
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        alert("이메일을 입력해주세요.");
+        return;
+    }
+
     try {
-        const response = await fetch("/api/orders");
-        if (!response.ok) throw new Error("주문 목록을 불러올 수 없습니다.");
+        // GET /api/orders/mine?email=user@example.com
+        const response = await fetch(`/api/orders/mine?email=${encodeURIComponent(email)}`);
+
+        if (!response.ok) {
+            throw new Error("주문 내역을 불러올 수 없습니다.");
+        }
 
         const orders = await response.json();
         renderOrderList(orders);
@@ -21,7 +31,7 @@ function renderOrderList(orders) {
     tbody.innerHTML = "";
 
     if (!orders || orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">주문 내역이 존재하지 않습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">해당 이메일의 주문 내역이 존재하지 않습니다.</td></tr>`;
         return;
     }
 

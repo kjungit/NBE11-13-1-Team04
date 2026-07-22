@@ -361,4 +361,40 @@ body {
     gap: 8px;
     justify-content: flex-end;
     margin-top: 20px;
+}/* 사이드바 하단 푸터 영역 */
+.sidebar-footer {
+    padding: 20px;
+    margin-top: auto; /* 사이드바 하단에 고정되도록 설정 */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 상단 구분선 (선택사항) */
+}
+
+/* 로그아웃 버튼 스타일 */
+.btn-logout {
+    width: 100%;
+    padding: 10px 16px;
+    background-color: transparent;
+    color: #e2e8f0;
+    border: 1px solid #4a5568;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* 로그아웃 버튼 호버 효과 */
+.btn-logout:hover {
+    background-color: #e53e3e; /* 은은하게 경고성 레드 컬러로 변경 */
+    color: #ffffff;
+    border-color: #e53e3e;
+    box-shadow: 0 2px 4px rgba(229, 62, 62, 0.2);
+}
+
+/* 버튼 클릭 시 눌림 효과 */
+.btn-logout:active {
+    transform: translateY(1px);
 }
