@@ -403,4 +403,56 @@ body {
 /* 버튼 클릭 시 눌림 효과 */
 .btn-logout:active {
     transform: translateY(1px);
+<<<<<<< Updated upstream
 }
+=======
+}/* Warning Button */
+.btn-warning {
+    background-color: #ed8936;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-warning:hover {
+    background-color: #dd6b20;
+}
+
+.btn-warning:active {
+    background-color: #c05621;
+    transform: translateY(1px);
+}
+
+/* 테이블 내부나 작은 영역에서 사용하는 경우 (btn-sm 조합) */
+.btn-warning.btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+/* 취소 승인 (Success) - 초록색 */
+.btn-success {
+    background-color: #10b981;
+    color: #ffffff;
+}
+
+
+/* 승인 버튼 */
+.btn-success {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+.btn-success:hover {
+    background: #1b5e20;
+}
+>>>>>>> Stashed changes

@@ -88,7 +88,6 @@ public class Order {
         if (this.status != OrderStatus.CANCEL_REQUESTED) {
             throw new IllegalStateException("취소 요청 상태인 주문만 거절 처리를 할 수 있습니다.");
         }
-        // 취소 요청 거절 시 '주문 확정' 상태로 변경
-        this.status = OrderStatus.CONFIRMED;
+        this.status = OrderStatus.ORDERED;
     }
 }

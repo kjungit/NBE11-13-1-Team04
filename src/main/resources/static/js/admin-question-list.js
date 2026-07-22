@@ -41,7 +41,7 @@ function renderTable(questions) {
             <td>${formattedDate}</td>
             <td>
                 <button class="btn-outline btn-sm" onclick="location.href='/admin/questions/${q.id}'">
-                    ${q.status === 'ANSWERED' ? '답변 수정' : '답변 작성'}
+                    ${q.status === 'ANSWERED' ? '상세 보기' : '답변 작성'}
                 </button>
             </td>
         `;
