@@ -50,7 +50,7 @@ class ProductApiControllerTest {
 
             // when & then
             mockMvc.perform(
-                            get("/product/{id}", 1L)
+                            get("/api/products/{id}", 1L)
                                     .with(anonymous())
                     )
                     .andExpect(status().isOk())
@@ -93,7 +93,7 @@ class ProductApiControllerTest {
         void getProductFailWhenIdInvalid() throws Exception {
             // when & then
             mockMvc.perform(
-                            get("/product/{id}", "invalid-id")
+                            get("/api/products/{id}", "invalid-id")
                                     .with(anonymous())
                     )
                     .andExpect(status().isBadRequest());
@@ -140,7 +140,7 @@ class ProductApiControllerTest {
 
             // when & then
             mockMvc.perform(
-                            get("/product")
+                            get("/api/products")
                                     .with(anonymous())
                     )
                     .andExpect(status().isOk())
@@ -195,7 +195,7 @@ class ProductApiControllerTest {
 
             // when & then
             mockMvc.perform(
-                            get("/product")
+                            get("/api/products")
                                     .with(anonymous())
                     )
                     .andExpect(status().isOk())
@@ -247,7 +247,7 @@ class ProductApiControllerTest {
             // when & then
             mockMvc.perform(
                             get(
-                                    "/product/category/{category}",
+                                    "/api/products/category/{category}",
                                     "커피"
                             )
                                     .with(anonymous())
@@ -284,7 +284,7 @@ class ProductApiControllerTest {
             // when & then
             mockMvc.perform(
                             get(
-                                    "/product/category/{category}",
+                                    "/api/products/category/{category}",
                                     "디저트"
                             )
                                     .with(anonymous())

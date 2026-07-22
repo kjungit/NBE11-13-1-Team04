@@ -26,7 +26,10 @@ public record ProductSaveResponse(
         LocalDateTime createdAt,
 
         @Schema(description = "상품 정보 최근 수정일")
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+
+        @Schema(description = "상품 수량", example = "1", defaultValue = "10")
+        Integer stock
 ){
     public static ProductSaveResponse from(Product product){
         return new ProductSaveResponse(
@@ -36,7 +39,8 @@ public record ProductSaveResponse(
                 product.getCategory(),
                 product.getFilePath(),
                 product.getCreatedAt(),
-                product.getUpdatedAt()
+                product.getUpdatedAt(),
+                product.getStock()
         );
     }
 }

@@ -25,7 +25,7 @@ public class Product {
     @Column(nullable = false, length = 50)
     String category;
 
-    @Column(nullable = false)
+    @Column
     String filePath;
 
     // 값을 저장할 때 builder에 기본값을 넣도록 함
@@ -40,15 +40,16 @@ public class Product {
     LocalDateTime updatedAt;
 
     @Column
-    private int stock;
+    private int stock = Integer.MAX_VALUE;
 
-    public void update(String name, Integer price, String category, String filePath, boolean isActive) {
+    public void update(String name, Integer price, String category, String filePath, boolean isActive, Integer stock) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.filePath = filePath;
         this.isActive = isActive;
         updatedAt = LocalDateTime.now();
+        this.stock = stock;
     }
 
 

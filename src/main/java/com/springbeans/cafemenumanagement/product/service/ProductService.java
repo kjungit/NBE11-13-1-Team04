@@ -36,17 +36,22 @@ public class ProductService {
     public ResponseEntity<ProductSaveResponse> save(ProductSaveRequest req) throws IOException {
         Files.createDirectories(PRODUCT_IMAGE_ROOT);
 
-        String fileName = UUID.randomUUID() + getExtension(req.image().getOriginalFilename());
-        Path savePath = PRODUCT_IMAGE_ROOT
-                .resolve(fileName)
-                .normalize();
 
-        if (!savePath.startsWith(PRODUCT_IMAGE_ROOT)) {
+        String fileName = "";
+        Path savePath = null;
+        if (req.image() != null && !req.image().isEmpty()) {
+            fileName = UUID.randomUUID() + getExtension(req.image().getOriginalFilename());
+            savePath = PRODUCT_IMAGE_ROOT
+                    .resolve(fileName)
+                    .normalize();
+        }
+
+        if (savePath != null && !savePath.startsWith(PRODUCT_IMAGE_ROOT)) {
             throw new IllegalArgumentException("잘못된 파일 경로입니다.");
         }
 
         // transferTo(): MultipartFile에서 지원하는 메서드, 데이터를 메모리에 로드하지 않고 디스크에 전송
-        req.image().transferTo(savePath);
+        if (savePath != null) { req.image().transferTo(savePath); };
 
          Product product = productRepository.save(Product.builder()
                  .name(req.name())
@@ -55,6 +60,7 @@ public class ProductService {
                  .filePath(PRODUCT_IMAGE_URL + fileName)
                  .createdAt(LocalDateTime.now())
                  .updatedAt(LocalDateTime.now())
+                 .stock(req.stock())
                  .build());
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -81,7 +87,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> getByCategory(String category){
         if (category == null || category.isBlank()) { throw new IllegalArgumentException("존재하지 않는 카테고리입니다."); }
-        List<ProductResponse> products = productRepository.findByCategory(category)
+        List<ProductResponse> products = productRepository.findByCategoryAndIsActiveTrue(category)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .map(ProductResponse::from)
@@ -112,7 +118,8 @@ public class ProductService {
                 req.price(),
                 req.category(),
                 filePath,
-                product.isActive()
+                product.isActive(),
+                req.stock()
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(ProductSaveResponse.from(product));
@@ -131,7 +138,8 @@ public class ProductService {
                 product.getPrice(),
                 product.getCategory(),
                 product.getFilePath(),
-                false
+                false,
+                product.getStock()
         );
 
         return ResponseEntity.noContent().build();

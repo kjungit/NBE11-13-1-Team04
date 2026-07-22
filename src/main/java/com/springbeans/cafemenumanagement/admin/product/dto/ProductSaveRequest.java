@@ -25,7 +25,9 @@ public record ProductSaveRequest(
         String category,
 
         @Schema(description = "상품 대표 이미지", type = "string", format = "binary")
-        @NotNull(message = "상품 이미지는 필수입니다.")
-        MultipartFile image
+        MultipartFile image,
+
+        @Schema(description = "상품 수량", example = "1", defaultValue = "10")
+        Integer stock
 ){
 }
