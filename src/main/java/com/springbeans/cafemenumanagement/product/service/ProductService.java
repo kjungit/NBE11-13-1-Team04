@@ -1,8 +1,8 @@
 package com.springbeans.cafemenumanagement.product.service;
 
-import com.springbeans.cafemenumanagement.admin.product.dto.ProductSaveRequest;
+import com.springbeans.cafemenumanagement.product.dto.ProductSaveRequest;
 import com.springbeans.cafemenumanagement.product.dto.ProductResponse;
-import com.springbeans.cafemenumanagement.admin.product.dto.ProductSaveResponse;
+import com.springbeans.cafemenumanagement.product.dto.ProductSaveResponse;
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
