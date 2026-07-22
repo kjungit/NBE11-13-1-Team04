@@ -39,7 +39,7 @@ public class Product {
     @Column
     LocalDateTime updatedAt;
 
-    @Column
+    @Column(nullable = false)
     private int stock;
 
     public void update(String name, Integer price, String category, String filePath, boolean isActive) {
