@@ -71,7 +71,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> getAll(){
-        List<ProductResponse> products = productRepository.findAll().stream()
+        List<ProductResponse> products = productRepository.findByIsActiveTrue().stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .map(ProductResponse::from)
                 .toList();
@@ -81,7 +81,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> getByCategory(String category){
         if (category == null || category.isBlank()) { throw new IllegalArgumentException("존재하지 않는 카테고리입니다."); }
-        List<ProductResponse> products = productRepository.findByCategoryOrderById(category)
+        List<ProductResponse> products = productRepository.findByCategory(category)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .map(ProductResponse::from)
