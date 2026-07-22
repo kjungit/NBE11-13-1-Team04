@@ -39,6 +39,9 @@ public class Order {
     private LocalDateTime orderedAt;
 
 
+    @Column(name = "confirmed_at")
+    private LocalDateTime confirmedAt;
+
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
