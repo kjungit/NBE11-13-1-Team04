@@ -1,4 +1,4 @@
-package com.springbeans.cafemenumanagement.admin.order.domain.entity;
+package com.springbeans.cafemenumanagement.order.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

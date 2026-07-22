@@ -1,11 +1,12 @@
 package com.springbeans.cafemenumanagement.admin.order.service;
 
-import com.springbeans.cafemenumanagement.admin.order.domain.entity.Order;
-import com.springbeans.cafemenumanagement.admin.order.domain.entity.OrderProduct;
-import com.springbeans.cafemenumanagement.admin.order.domain.repository.OrderRepository;
+import com.springbeans.cafemenumanagement.admin.order.domain.repository.OrderAdminRepository;
 import com.springbeans.cafemenumanagement.admin.order.dto.AdminOrderDetailResponse;
 import com.springbeans.cafemenumanagement.admin.order.dto.AdminOrderListResponse;
 import com.springbeans.cafemenumanagement.admin.order.dto.AdminOrderSearchCondition;
+import com.springbeans.cafemenumanagement.order.entity.Order;
+import com.springbeans.cafemenumanagement.order.entity.OrderProduct;
+import com.springbeans.cafemenumanagement.order.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AdminOrderService {
-    private final OrderRepository orderRepository;
+    private final OrderAdminRepository orderAdminRepository;
 
     public List<AdminOrderListResponse> getOrders( AdminOrderSearchCondition condition ) {
-        List<Order> orders = orderRepository.findAllByCondition(condition);
+        List<Order> orders = orderAdminRepository.findAllByCondition(condition);
 
         return orders.stream()
                 .map(this::convertToAdminOrderListResponse)
@@ -27,7 +28,7 @@ public class AdminOrderService {
     }
 
     public AdminOrderDetailResponse getOrderDetail( Long orderId ) {
-        Order order = orderRepository.findByIdWithProducts(orderId)
+        Order order = orderAdminRepository.findByIdWithProducts(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
 
         return convertToAdminOrderDetailResponse(order);
@@ -88,6 +89,37 @@ public class AdminOrderService {
                 amount,
                 price * amount
         );
+    }
+
+    @Transactional
+    public void approveCancelOrder( Long orderId ) {
+        Order order = orderAdminRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. id: " + orderId));
+
+        if (order.getStatus() != OrderStatus.CANCEL_REQUESTED) {
+            throw new IllegalArgumentException("취소 요청 상태의 주문만 승인할 수 있습니다.");
+        }
+
+        order.cancel();
+    }
+
+    @Transactional
+    public void rejectCancelOrder(Long orderId) {
+        Order order = orderAdminRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
+
+        order.rejectCancel();
+    }
+
+    @Transactional
+    public void cancelOrder( Long orderId ) {
+        Order order = orderAdminRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
+
+        if(order.getStatus() == OrderStatus.CONFIRMED) {
+            new IllegalArgumentException("확정된 주문은 취소할 수 없습니다.");
+        }
+        order.cancel();
     }
 
 }
