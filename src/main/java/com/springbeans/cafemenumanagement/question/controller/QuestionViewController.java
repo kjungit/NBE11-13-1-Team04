@@ -11,13 +11,13 @@ public class QuestionViewController {
     // 문의 등록 페이지
     @GetMapping("/new")
     public String createForm() {
-        return "question/question-create";
+        return "question-create";
     }
 
     // 문의 목록 조회 페이지
     @GetMapping
     public String listForm() {
-        return "question/question-list";
+        return "question-list";
     }
 
     // 문의 상세 조회 페이지
@@ -30,6 +30,6 @@ public class QuestionViewController {
         model.addAttribute("questionId", questionId);
         model.addAttribute("email", email);
 
-        return "question/question-detail";
+        return "question-detail";
     }
 }
