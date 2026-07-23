@@ -124,9 +124,10 @@ public class AdminOrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
 
-        if(order.getStatus() == OrderStatus.CONFIRMED) {
-            new IllegalArgumentException("확정된 주문은 취소할 수 없습니다.");
+        if (order.getStatus() == OrderStatus.CONFIRMED) {
+            throw new IllegalArgumentException("확정된 주문은 취소할 수 없습니다.");
         }
+
         order.cancel();
     }
 
