@@ -4,6 +4,8 @@ import com.springbeans.cafemenumanagement.product.dto.request.ProductSaveRequest
 import com.springbeans.cafemenumanagement.product.dto.response.ProductResponse;
 import com.springbeans.cafemenumanagement.product.dto.response.ProductSaveResponse;
 import com.springbeans.cafemenumanagement.product.entity.Product;
+import com.springbeans.cafemenumanagement.product.exception.ProductErrorCode;
+import com.springbeans.cafemenumanagement.product.exception.ProductException;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,8 +35,12 @@ public class ProductService {
             "/images/products/";
 
     @Transactional
-    public ResponseEntity<ProductSaveResponse> save(ProductSaveRequest req) throws IOException {
-        Files.createDirectories(PRODUCT_IMAGE_ROOT);
+    public ResponseEntity<ProductSaveResponse> save(ProductSaveRequest req) {
+        try {
+            Files.createDirectories(PRODUCT_IMAGE_ROOT);
+        } catch (IOException e) {
+            throw new ProductException(ProductErrorCode.IMAGE_DIRECTORY_CREATE_FAILED);
+        }
 
 
         String fileName = "";
@@ -47,11 +53,17 @@ public class ProductService {
         }
 
         if (savePath != null && !savePath.startsWith(PRODUCT_IMAGE_ROOT)) {
-            throw new IllegalArgumentException("잘못된 파일 경로입니다.");
+            throw new ProductException(ProductErrorCode.INVALID_IMAGE_PATH);
         }
 
         // transferTo(): MultipartFile에서 지원하는 메서드, 데이터를 메모리에 로드하지 않고 디스크에 전송
-        if (savePath != null) { req.image().transferTo(savePath); };
+        if (savePath != null) {
+            try {
+                req.image().transferTo(savePath);
+            } catch (IOException e) {
+                throw new ProductException(ProductErrorCode.IMAGE_SAVE_FAILED);
+            }
+        };
 
          Product product = productRepository.save(Product.builder()
                  .name(req.name())
@@ -70,7 +82,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ResponseEntity<ProductResponse> get(Long id){
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ProductResponse.from(product));
     }
@@ -86,7 +98,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> getByCategory(String category){
-        if (category == null || category.isBlank()) { throw new IllegalArgumentException("존재하지 않는 카테고리입니다."); }
+        if (category == null || category.isBlank()) { throw new ProductException(ProductErrorCode.INVALID_CATEGORY); }
         List<ProductResponse> products = productRepository.findByCategoryAndIsActiveTrue(category)
                 .stream()
                 .sorted(Comparator.comparing(Product::getId))
@@ -99,7 +111,7 @@ public class ProductService {
     public ResponseEntity<ProductSaveResponse> update(Long id, ProductSaveRequest req) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("상품이 존재하지 않습니다.")
+                        new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND)
                 );
 
         String filePath = product.getFilePath();
@@ -129,9 +141,9 @@ public class ProductService {
     public ResponseEntity<Void> delete(Long id){
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
-                    new IllegalArgumentException("상품이 존재하지 않습니다.")
+                    new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND)
                 );
-        if (!product.isActive()) { throw new IllegalArgumentException("이미 삭제된 상품입니다."); }
+        if (!product.isActive()) { throw new ProductException(ProductErrorCode.PRODUCT_ALREADY_DELETED); }
 
         product.update(
                 product.getName(),
@@ -147,10 +159,10 @@ public class ProductService {
 
     // 원본 파일의 확장자만 분리하는 메서드 (coffee.jpg -> .jpg)
     private String getExtension(String originalFilename){
-        if (originalFilename == null || originalFilename.isBlank()) throw new IllegalArgumentException("파일명이 존재하지 않습니다.");
+        if (originalFilename == null || originalFilename.isBlank()) throw new ProductException(ProductErrorCode.IMAGE_FILENAME_MISSING);
         String fileName = Paths.get(originalFilename).getFileName().toString();
         int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) throw new IllegalArgumentException("파일 확장자가 존재하지 않습니다.");
+        if (dotIndex == -1) throw new ProductException(ProductErrorCode.IMAGE_EXTENSION_MISSING);
         return fileName.substring(dotIndex).toLowerCase();
     }
 }
