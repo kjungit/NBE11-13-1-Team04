@@ -49,4 +49,12 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
                           @Param("confirmedAt") LocalDateTime confirmedAt,
                           @Param("startTime") LocalDateTime startTime,
                           @Param("endTime") LocalDateTime endTime);
+
+    // 자동 확정 대상 주문 조회
+    @Query("select o from Order o " +
+           "where o.status = :status " +
+           "and o.orderedAt > :startTime and o.orderedAt <= :endTime")
+    List<Order> findTargetOrders(@Param("status") OrderStatus status,
+                                 @Param("startTime") LocalDateTime startTime,
+                                 @Param("endTime") LocalDateTime endTime);
 }

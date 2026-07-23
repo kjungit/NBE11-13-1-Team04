@@ -2,6 +2,7 @@ package com.springbeans.cafemenumanagement.question.service;
 
 import com.springbeans.cafemenumanagement.answer.domain.repository.AnswerRepository;
 import com.springbeans.cafemenumanagement.answer.dto.response.AnswerDetailResponse;
+import com.springbeans.cafemenumanagement.global.slack.SlackNotificationService;
 import com.springbeans.cafemenumanagement.question.domain.entity.Question;
 import com.springbeans.cafemenumanagement.question.domain.repository.QuestionRepository;
 import com.springbeans.cafemenumanagement.question.dto.request.QuestionAuthRequest;
@@ -20,7 +21,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-
+    private final SlackNotificationService slackNotificationService;
     @Transactional
     public QuestionSaveResponse create( QuestionCreateRequest request ) {
 
@@ -36,6 +37,11 @@ public class QuestionService {
 
         questionRepository.save(question);
 
+        slackNotificationService.sendInquiryNotification(
+                question.getEmail(),
+                question.getTitle(),
+                question.getContent()
+                                                        );
         // 저장 결과 반환
         return QuestionSaveResponse.from(question);
     }
