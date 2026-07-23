@@ -126,10 +126,34 @@ function renderCart() {
     document.getElementById("totalPrice").innerText = `${total.toLocaleString()}원`;
 }
 
+// 카카오(다음) 우편번호 서비스 - 주소 검색 팝업
+// HTML에 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 추가 필요
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function (data) {
+            // 도로명 주소를 기본값으로 사용, 없으면 지번 주소 사용
+            const roadAddr = data.roadAddress;
+            const jibunAddr = data.jibunAddress;
+            const fullAddr = roadAddr || jibunAddr;
+
+            document.getElementById("postalCode").value = data.zonecode;
+            document.getElementById("address").value = fullAddr;
+
+            const detailInput = document.getElementById("detailAddress");
+            if (detailInput) {
+                detailInput.focus();
+            }
+        }
+    }).open();
+}
+
 // DTO Payload 생성 헬퍼
 function buildCartPayload() {
     const email = document.getElementById("email").value.trim();
-    const address = document.getElementById("address").value.trim();
+    const baseAddress = document.getElementById("address").value.trim();
+    const detailAddressEl = document.getElementById("detailAddress");
+    const detailAddress = detailAddressEl ? detailAddressEl.value.trim() : "";
+    const address = detailAddress ? `${baseAddress} ${detailAddress}` : baseAddress;
     const postalCode = document.getElementById("postalCode").value.trim();
 
     return {
