@@ -21,17 +21,18 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: "nvm7588@gmail.com"
-#    password: "lfxyplndovhhxczs"
-#    protocol: smtp
-#    properties:
-#      "[mail.smtp.auth]": true
-#      "[mail.smtp.starttls.enable]": true
-#      "[mail.smtp.starttls.required]": true
-#      "[mail.debug]": true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    spring:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
+    properties:
+      "[mail.smtp.auth]": true
+      "[mail.smtp.starttls.enable]": true
+      "[mail.smtp.starttls.required]": true
+      "[mail.debug]": true
 file:
   upload-dir: ./uploads/products
 
