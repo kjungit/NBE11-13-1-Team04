@@ -4,6 +4,7 @@ import com.springbeans.cafemenumanagement.product.dto.response.ProductResponse;
 import com.springbeans.cafemenumanagement.product.dto.request.ProductSaveRequest;
 import com.springbeans.cafemenumanagement.product.dto.response.ProductSaveResponse;
 import com.springbeans.cafemenumanagement.product.entity.Product;
+import com.springbeans.cafemenumanagement.product.exception.ProductException;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -145,8 +146,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.save(request)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("파일명이 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("이미지 파일명이 존재하지 않습니다.");
 
             then(productRepository)
                     .should(never())
@@ -172,8 +173,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.save(request)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("파일명이 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("이미지 파일명이 존재하지 않습니다.");
 
             then(productRepository)
                     .should(never())
@@ -199,8 +200,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.save(request)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("파일 확장자가 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("이미지 파일 확장자가 존재하지 않습니다.");
 
             then(productRepository)
                     .should(never())
@@ -272,8 +273,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.get(999L)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품이 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("상품을 찾을 수 없습니다.");
 
             then(productRepository)
                     .should()
@@ -460,8 +461,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.getByCategory(null)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("존재하지 않는 카테고리입니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("카테고리가 올바르지 않습니다.");
 
             then(productRepository)
                     .should(never())
@@ -475,8 +476,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.getByCategory(" ")
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("존재하지 않는 카테고리입니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("카테고리가 올바르지 않습니다.");
 
             then(productRepository)
                     .should(never())
@@ -678,8 +679,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.update(999L, request)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품이 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("상품을 찾을 수 없습니다.");
 
             then(productRepository)
                     .should()
@@ -746,8 +747,8 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.delete(999L)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품이 존재하지 않습니다.");
+                    .isInstanceOf(ProductException.class)
+                    .hasMessage("상품을 찾을 수 없습니다.");
 
             then(productRepository)
                     .should()
@@ -774,7 +775,7 @@ class ProductServiceTest {
             assertThatThrownBy(() ->
                     productService.delete(1L)
             )
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ProductException.class)
                     .hasMessage("이미 삭제된 상품입니다.");
 
             assertThat(product.isActive())

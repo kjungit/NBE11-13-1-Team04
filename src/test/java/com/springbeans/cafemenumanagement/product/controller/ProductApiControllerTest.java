@@ -1,5 +1,6 @@
 package com.springbeans.cafemenumanagement.product.controller;
 
+import com.springbeans.cafemenumanagement.global.slack.SlackNotificationService;
 import com.springbeans.cafemenumanagement.product.dto.response.ProductResponse;
 import com.springbeans.cafemenumanagement.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +29,9 @@ class ProductApiControllerTest {
 
     @MockitoBean
     private ProductService productService;
+
+    @MockitoBean
+    private SlackNotificationService slackNotificationService;
 
     @Nested
     @DisplayName("상품 단건 조회")
@@ -246,10 +250,8 @@ class ProductApiControllerTest {
 
             // when & then
             mockMvc.perform(
-                            get(
-                                    "/api/products/category/{category}",
-                                    "커피"
-                            )
+                            get("/api/products/category")
+                                    .param("category", "커피")
                                     .with(anonymous())
                     )
                     .andExpect(status().isOk())
@@ -283,10 +285,8 @@ class ProductApiControllerTest {
 
             // when & then
             mockMvc.perform(
-                            get(
-                                    "/api/products/category/{category}",
-                                    "디저트"
-                            )
+                            get("/api/products/category")
+                                    .param("category", "디저트")
                                     .with(anonymous())
                     )
                     .andExpect(status().isOk())
