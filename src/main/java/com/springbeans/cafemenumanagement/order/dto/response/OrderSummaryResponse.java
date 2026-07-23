@@ -9,6 +9,7 @@ public record OrderSummaryResponse(
 
         Long orderId,
         String email,
+        String address,
         OrderStatus status,
         LocalDateTime orderedAt
 

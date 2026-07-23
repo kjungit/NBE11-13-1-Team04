@@ -83,8 +83,9 @@ public class CartService {
 
         Order order =
                 orderRepository
-                        .findFirstByEmailAndOrderedAtBetween(
+                        .findFirstByEmailAndAddressAndOrderedAtBetween(
                                 request.getEmail(),
+                                request.getAddress(),
                                 start,
                                 end
                         )

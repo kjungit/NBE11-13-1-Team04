@@ -31,7 +31,7 @@ function renderOrderList(orders) {
     tbody.innerHTML = "";
 
     if (!orders || orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">해당 이메일의 주문 내역이 존재하지 않습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">해당 이메일의 주문 내역이 존재하지 않습니다.</td></tr>`;
         return;
     }
 
@@ -42,6 +42,7 @@ function renderOrderList(orders) {
         tr.innerHTML = `
             <td>${order.orderId}</td>
             <td>${order.email}</td>
+            <td>${order.address || "-"}</td>
             <td>${getStatusBadge(order.status)}</td>
             <td>${formattedDate}</td>
             <td>

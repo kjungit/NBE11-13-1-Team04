@@ -41,6 +41,8 @@ function renderOrderDetail(order) {
     document.getElementById("detailAddress").innerText = order.address || "-";
     document.getElementById("detailOrderedAt").innerText = order.orderedAt ? new Date(order.orderedAt).toLocaleString() : "-";
 
+    renderOrderItems(order.items, order.totalPrice);
+
     // 취소 버튼 제어
     const btnCancel = document.getElementById("btnCancel");
 
@@ -58,6 +60,30 @@ function renderOrderDetail(order) {
         btnCancel.disabled = false;
         btnCancel.innerText = "주문 취소 요청";
     }
+}
+
+// 주문 상품 목록 렌더링
+function renderOrderItems(items, totalPrice) {
+    const tbody = document.getElementById("orderItemsBody");
+    tbody.innerHTML = "";
+
+    if (!items || items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">주문한 상품이 없습니다.</td></tr>`;
+    } else {
+        items.forEach(item => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${item.productName}</td>
+                <td>${item.price.toLocaleString()}원</td>
+                <td>${item.amount}개</td>
+                <td>${item.subtotal.toLocaleString()}원</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    const total = totalPrice ?? (items || []).reduce((sum, item) => sum + item.subtotal, 0);
+    document.getElementById("detailTotalPrice").innerText = `${total.toLocaleString()}원`;
 }
 
 // API: 주문 취소 요청
