@@ -1,10 +1,12 @@
 package com.springbeans.cafemenumanagement.question.service;
 
 import com.springbeans.cafemenumanagement.answer.domain.repository.AnswerRepository;
-import com.springbeans.cafemenumanagement.answer.dto.AnswerDetailResponse;
+import com.springbeans.cafemenumanagement.answer.dto.response.AnswerDetailResponse;
 import com.springbeans.cafemenumanagement.question.domain.entity.Question;
 import com.springbeans.cafemenumanagement.question.domain.repository.QuestionRepository;
-import com.springbeans.cafemenumanagement.question.dto.*;
+import com.springbeans.cafemenumanagement.question.dto.request.QuestionAuthRequest;
+import com.springbeans.cafemenumanagement.question.dto.request.QuestionCreateRequest;
+import com.springbeans.cafemenumanagement.question.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ public class QuestionService {
     private final AnswerRepository answerRepository;
 
     @Transactional
-    public QuestionSaveResponse create(QuestionCreateRequest request) {
+    public QuestionSaveResponse create( QuestionCreateRequest request ) {
 
         // 요청값 검증
         validateCreateRequest(request);
@@ -38,7 +40,7 @@ public class QuestionService {
         return QuestionSaveResponse.from(question);
     }
 
-    public List<QuestionPreviewResponse> getQuestions(String email) {
+    public List<QuestionPreviewResponse> getQuestions( String email ) {
 
         // 이메일로 본인의 활성 문의 목록 조회
         return questionRepository
@@ -48,7 +50,7 @@ public class QuestionService {
                 .toList();
     }
 
-    public QuestionDetailResponse getQuestion(Long id, String email) {
+    public QuestionDetailResponse getQuestion( Long id, String email ) {
 
         // 이메일 검증
         if (email == null || email.isBlank()) {
@@ -86,7 +88,7 @@ public class QuestionService {
                 .toList();
     }
 
-    public AdminQuestionDetailResponse getAdminQuestion(Long id) {
+    public AdminQuestionDetailResponse getAdminQuestion( Long id ) {
 
         // 활성 문의 조회
         Question question = questionRepository.findByIdAndIsActiveTrue(id)
@@ -103,7 +105,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public void delete(Long questionId, QuestionAuthRequest request) {
+    public void delete(Long questionId, QuestionAuthRequest request ) {
 
         // 삭제 요청값 검증
         if (request == null

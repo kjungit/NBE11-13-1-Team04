@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.springbeans.cafemenumanagement.admin.sales.dto.SalesStatResponse;
-import com.springbeans.cafemenumanagement.order.entity.OrderStatus;
+import com.springbeans.cafemenumanagement.order.domain.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

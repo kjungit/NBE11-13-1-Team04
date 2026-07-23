@@ -1,6 +1,6 @@
 package com.springbeans.cafemenumanagement.product.controller;
 
-import com.springbeans.cafemenumanagement.product.dto.ProductResponse;
+import com.springbeans.cafemenumanagement.product.dto.response.ProductResponse;
 import com.springbeans.cafemenumanagement.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

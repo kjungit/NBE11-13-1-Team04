@@ -1,7 +1,7 @@
 package com.springbeans.cafemenumanagement.question.controller;
 
-import com.springbeans.cafemenumanagement.question.dto.AdminQuestionDetailResponse;
-import com.springbeans.cafemenumanagement.question.dto.AdminQuestionPreviewResponse;
+import com.springbeans.cafemenumanagement.question.dto.response.AdminQuestionDetailResponse;
+import com.springbeans.cafemenumanagement.question.dto.response.AdminQuestionPreviewResponse;
 import com.springbeans.cafemenumanagement.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
