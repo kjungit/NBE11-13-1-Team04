@@ -15,11 +15,13 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 
     // ===== 사용자(User) 전용 쿼리 =====
 
-    Optional<Order> findFirstByEmailAndOrderedAtBetween(
+    // 같은 이메일 + 같은 주소 + 당일(기간 내) 주문을 찾아 병합용으로 사용
+    Optional<Order> findFirstByEmailAndAddressAndOrderedAtBetween(
             String email,
+            String address,
             LocalDateTime start,
             LocalDateTime end
-                                                       );
+    );
 
     List<Order> findByEmailOrderByOrderedAtDesc(String email);
 
@@ -30,18 +32,18 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 
     // Fetch Join을 통한 단건 상세 조회 (Order + OrderProduct + Product)
     @Query("select o from Order o " +
-           "left join fetch o.orderProducts op " +
-           "left join fetch op.product " +
-           "where o.id = :orderId")
+            "left join fetch o.orderProducts op " +
+            "left join fetch op.product " +
+            "where o.id = :orderId")
     Optional<Order> findByIdWithProducts(@Param("orderId") Long orderId);
 
     // 스케줄러 일괄 자동 확정 벌크 쿼리
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Order o " +
-           "SET o.status = :targetStatus, " +
-           "    o.confirmedAt = :confirmedAt " +
-           "WHERE o.status = :sourceStatus " +
-           "AND o.orderedAt > :startTime AND o.orderedAt <= :endTime")
+            "SET o.status = :targetStatus, " +
+            "    o.confirmedAt = :confirmedAt " +
+            "WHERE o.status = :sourceStatus " +
+            "AND o.orderedAt > :startTime AND o.orderedAt <= :endTime")
     int bulkConfirmOrders(@Param("sourceStatus") OrderStatus sourceStatus,
                           @Param("targetStatus") OrderStatus targetStatus,
                           @Param("confirmedAt") LocalDateTime confirmedAt,

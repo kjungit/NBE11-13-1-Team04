@@ -59,6 +59,30 @@
 
             <hr class="divider">
 
+            <h3 class="card-title">🛒 주문 상품 목록</h3>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>상품명</th>
+                    <th>단가</th>
+                    <th>수량</th>
+                    <th>금액</th>
+                </tr>
+                </thead>
+                <tbody id="orderItemsBody">
+                <tr>
+                    <td colspan="4" style="text-align:center;">불러오는 중...</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="cart-summary">
+                <span>총 결제금액</span>
+                <strong id="detailTotalPrice">0원</strong>
+            </div>
+
+            <hr class="divider">
+
             <div class="action-buttons">
                 <button class="btn-outline" onclick="location.href='/orders'">목록으로 돌아가기</button>
                 <button id="btnCancel" class="btn-danger" onclick="requestCancelOrder()">주문 취소 요청</button>

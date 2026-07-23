@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Service
@@ -71,20 +72,21 @@ public class CartService {
         // 상품 존재 여부만 먼저 확인
         check(request);
 
-        LocalDateTime start =
-                LocalDateTime.now()
-                        .toLocalDate()
-                        .atStartOfDay();
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime cutoff = LocalTime.of(14, 0);
 
-        LocalDateTime end =
-                LocalDateTime.now()
-                        .toLocalDate()
-                        .atTime(14, 0);
+        // 매일 오후 2시를 기준으로 하루 주기가 갱신됨 (전날 14:00 ~ 당일 14:00)
+        LocalDateTime end = now.toLocalTime().isBefore(cutoff)
+                ? now.toLocalDate().atTime(cutoff)
+                : now.toLocalDate().plusDays(1).atTime(cutoff);
+
+        LocalDateTime start = end.minusDays(1);
 
         Order order =
                 orderRepository
-                        .findFirstByEmailAndOrderedAtBetween(
+                        .findFirstByEmailAndAddressAndOrderedAtBetween(
                                 request.getEmail(),
+                                request.getAddress(),
                                 start,
                                 end
                         )

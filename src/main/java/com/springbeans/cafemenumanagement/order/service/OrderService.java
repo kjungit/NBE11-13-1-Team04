@@ -4,6 +4,7 @@ import com.springbeans.cafemenumanagement.order.dto.request.OrderCreateRequest;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderCancelResponse;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderCreateResponse;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderDetailResponse;
+import com.springbeans.cafemenumanagement.order.dto.response.OrderItemResponse;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderSummaryResponse;
 import com.springbeans.cafemenumanagement.order.domain.entity.Order;
 import com.springbeans.cafemenumanagement.order.domain.entity.OrderProduct;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -35,23 +37,23 @@ public class OrderService {
     ) {
 
 
-        LocalDateTime start =
-                LocalDateTime.now()
-                        .toLocalDate()
-                        .atStartOfDay();
+        LocalDateTime now = LocalDateTime.now();
+        LocalTime cutoff = LocalTime.of(14, 0);
 
+        // 매일 오후 2시를 기준으로 하루 주기가 갱신됨 (전날 14:00 ~ 당일 14:00)
+        LocalDateTime end = now.toLocalTime().isBefore(cutoff)
+                ? now.toLocalDate().atTime(cutoff)
+                : now.toLocalDate().plusDays(1).atTime(cutoff);
 
-        LocalDateTime end =
-                LocalDateTime.now()
-                        .toLocalDate()
-                        .atTime(14, 0);
+        LocalDateTime start = end.minusDays(1);
 
 
 
         Order order =
                 orderRepository
-                        .findFirstByEmailAndOrderedAtBetween(
+                        .findFirstByEmailAndAddressAndOrderedAtBetween(
                                 request.email(),
+                                request.address(),
                                 start,
                                 end
                         )
@@ -110,6 +112,7 @@ public class OrderService {
                 .map(order -> new OrderSummaryResponse(
                         order.getId(),
                         order.getEmail(),
+                        order.getAddress(),
                         order.getStatus(),
                         order.getOrderedAt()
                 ))
@@ -126,6 +129,7 @@ public class OrderService {
                 .map(order -> new OrderSummaryResponse(
                         order.getId(),
                         order.getEmail(),
+                        order.getAddress(),
                         order.getStatus(),
                         order.getOrderedAt()
                 ))
@@ -135,11 +139,31 @@ public class OrderService {
     /**
      * 주문 상세 조회
      */
+    @Transactional(readOnly = true)
     public OrderDetailResponse getOrder(Long orderId) {
 
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdWithProducts(orderId)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."));
+
+        List<OrderItemResponse> items = order.getOrderProducts()
+                .stream()
+                .map(orderProduct -> {
+                    int price = orderProduct.getProduct().getPrice();
+                    int amount = orderProduct.getAmount();
+                    return new OrderItemResponse(
+                            orderProduct.getProduct().getId(),
+                            orderProduct.getProduct().getName(),
+                            price,
+                            amount,
+                            price * amount
+                    );
+                })
+                .toList();
+
+        int totalPrice = items.stream()
+                .mapToInt(OrderItemResponse::subtotal)
+                .sum();
 
         return new OrderDetailResponse(
                 order.getId(),
@@ -148,7 +172,9 @@ public class OrderService {
                 order.getPostalCode(),
                 order.getOrderCode(),
                 order.getStatus(),
-                order.getOrderedAt()
+                order.getOrderedAt(),
+                items,
+                totalPrice
         );
     }
 
