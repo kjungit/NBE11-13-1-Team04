@@ -6,9 +6,11 @@ import com.springbeans.cafemenumanagement.answer.domain.entity.Answer;
 import com.springbeans.cafemenumanagement.answer.domain.repository.AnswerRepository;
 import com.springbeans.cafemenumanagement.answer.dto.request.AnswerSaveRequest;
 import com.springbeans.cafemenumanagement.answer.dto.response.AnswerSaveResponse;
+import com.springbeans.cafemenumanagement.answer.event.AnswerCreatedEvent;
 import com.springbeans.cafemenumanagement.question.domain.entity.Question;
 import com.springbeans.cafemenumanagement.question.domain.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final AdminRepository adminRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public AnswerSaveResponse create(
@@ -64,6 +67,14 @@ public class AnswerService {
 
         // 문의 상태를 답변 완료로 변경
         question.markAsAnswered();
+
+        eventPublisher.publishEvent(
+                new AnswerCreatedEvent(
+                        question.getEmail(),
+                        question.getTitle(),
+                        answer.getContent()
+                )
+        );
 
         // 저장된 답변 정보 반환
         return AnswerSaveResponse.from(answer);
