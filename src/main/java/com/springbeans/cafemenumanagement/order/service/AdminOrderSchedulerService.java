@@ -1,5 +1,6 @@
 package com.springbeans.cafemenumanagement.order.service;
 
+import com.springbeans.cafemenumanagement.global.slack.SlackNotificationService;
 import com.springbeans.cafemenumanagement.order.domain.entity.OrderStatus;
 import com.springbeans.cafemenumanagement.order.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AdminOrderSchedulerService {
+
     private final OrderRepository orderRepository;
+    private final SlackNotificationService slackNotificationService;
 
     @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
     @Transactional
     public void autoConfirmOrders() {
         LocalDateTime now = LocalDateTime.now();
-        // 전날 오후 2시 (now.minusDays(1)로 설정)
         LocalDateTime startDateTime = now.minusDays(1);
         LocalDateTime endDateTime = now;
 
@@ -32,8 +34,13 @@ public class AdminOrderSchedulerService {
                 now,
                 startDateTime,
                 endDateTime
-                                                                 );
+                                                            );
 
         log.info("=== [스케줄러 완료] 총 {}건의 주문이 확정 상태로 변경되었습니다. ===", updatedCount);
+
+        // 확정된 주문이 1건 이상일 때 건수만 알림 발송
+        if (updatedCount > 0) {
+            slackNotificationService.sendBatchConfirmNotification(updatedCount);
+        }
     }
 }
