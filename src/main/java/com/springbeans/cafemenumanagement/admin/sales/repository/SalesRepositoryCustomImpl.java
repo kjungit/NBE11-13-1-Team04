@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.springbeans.cafemenumanagement.order.entity.QOrder.order;
-import static com.springbeans.cafemenumanagement.order.entity.QOrderProduct.orderProduct;
+import static com.springbeans.cafemenumanagement.order.domain.entity.QOrder.order;
+import static com.springbeans.cafemenumanagement.order.domain.entity.QOrderProduct.orderProduct;
 import static com.springbeans.cafemenumanagement.product.entity.QProduct.product;
 
 @Repository
@@ -31,7 +31,6 @@ public class SalesRepositoryCustomImpl implements SalesRepositoryCustom {
                 "DATE_FORMAT({0}, '%Y-%m')", order.orderedAt
                                                                  );
 
-        // SQL SUM() 함수를 Direct로 템플릿화
         NumberExpression<Long> sumPrice = Expressions.numberTemplate(Long.class, "sum({0} * {1})", product.price, orderProduct.amount);
         NumberExpression<Long> sumAmount = Expressions.numberTemplate(Long.class, "sum({0})", orderProduct.amount);
 
@@ -45,7 +44,7 @@ public class SalesRepositoryCustomImpl implements SalesRepositoryCustom {
                 .join(orderProduct.order, order)
                 .join(orderProduct.product, product)
                 .where(
-                        order.status.ne(OrderStatus.CANCELED),
+                        order.status.eq(OrderStatus.CONFIRMED), // ★ ne(CANCELED) -> eq(CONFIRMED) 로 변경
                         order.orderedAt.year().eq(year)
                       )
                 .groupBy(formattedDate)
@@ -73,7 +72,7 @@ public class SalesRepositoryCustomImpl implements SalesRepositoryCustom {
                 .join(orderProduct.order, order)
                 .join(orderProduct.product, product)
                 .where(
-                        order.status.ne(OrderStatus.CANCELED),
+                        order.status.eq(OrderStatus.CONFIRMED), // ★ ne(CANCELED) -> eq(CONFIRMED) 로 변경
                         order.orderedAt.goe(startDate.atStartOfDay()),
                         order.orderedAt.loe(endDate.atTime(LocalTime.MAX))
                       )
@@ -98,7 +97,7 @@ public class SalesRepositoryCustomImpl implements SalesRepositoryCustom {
                 .join(orderProduct.order, order)
                 .join(orderProduct.product, product)
                 .where(
-                        order.status.ne(OrderStatus.CANCELED),
+                        order.status.eq(OrderStatus.CONFIRMED), // ★ ne(CANCELED) -> eq(CONFIRMED) 로 변경
                         order.orderedAt.goe(startDate.atStartOfDay()),
                         order.orderedAt.loe(endDate.atTime(LocalTime.MAX))
                       )
