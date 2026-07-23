@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.springbeans.cafemenumanagement.order.entity.QOrder.order;
-import static com.springbeans.cafemenumanagement.order.entity.QOrderProduct.orderProduct;
+import static com.springbeans.cafemenumanagement.order.domain.entity.QOrder.order;
+import static com.springbeans.cafemenumanagement.order.domain.entity.QOrderProduct.orderProduct;
 import static com.springbeans.cafemenumanagement.product.entity.QProduct.product;
 
 @Repository
