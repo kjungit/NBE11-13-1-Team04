@@ -1,6 +1,10 @@
 package com.springbeans.cafemenumanagement.question.controller;
 
-import com.springbeans.cafemenumanagement.question.dto.*;
+import com.springbeans.cafemenumanagement.question.dto.request.QuestionAuthRequest;
+import com.springbeans.cafemenumanagement.question.dto.request.QuestionCreateRequest;
+import com.springbeans.cafemenumanagement.question.dto.response.QuestionDetailResponse;
+import com.springbeans.cafemenumanagement.question.dto.response.QuestionPreviewResponse;
+import com.springbeans.cafemenumanagement.question.dto.response.QuestionSaveResponse;
 import com.springbeans.cafemenumanagement.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +24,7 @@ public class QuestionApiController {
     @PostMapping
     public ResponseEntity<QuestionSaveResponse> create(
             @RequestBody QuestionCreateRequest request
-    ) {
+                                                      ) {
         QuestionSaveResponse response = questionService.create(request);
 
         return ResponseEntity
@@ -32,7 +36,7 @@ public class QuestionApiController {
     @GetMapping
     public ResponseEntity<List<QuestionPreviewResponse>> getQuestions(
             @RequestParam String email
-    ) {
+                                                                     ) {
         List<QuestionPreviewResponse> response = questionService.getQuestions(email);
 
         return ResponseEntity.ok(response);
@@ -43,7 +47,7 @@ public class QuestionApiController {
     public ResponseEntity<QuestionDetailResponse> getQuestion(
             @PathVariable Long questionId,
             @RequestParam String email
-    ) {
+                                                             ) {
         QuestionDetailResponse response = questionService.getQuestion(questionId, email);
 
         return ResponseEntity.ok(response);

@@ -1,7 +1,7 @@
 package com.springbeans.cafemenumanagement.answer.controller;
 
-import com.springbeans.cafemenumanagement.answer.dto.AnswerSaveRequest;
-import com.springbeans.cafemenumanagement.answer.dto.AnswerSaveResponse;
+import com.springbeans.cafemenumanagement.answer.dto.request.AnswerSaveRequest;
+import com.springbeans.cafemenumanagement.answer.dto.response.AnswerSaveResponse;
 import com.springbeans.cafemenumanagement.answer.service.AnswerService;
 import com.springbeans.cafemenumanagement.global.constant.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;

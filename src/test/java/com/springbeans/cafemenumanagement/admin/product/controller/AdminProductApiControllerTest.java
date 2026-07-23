@@ -3,7 +3,7 @@ package com.springbeans.cafemenumanagement.admin.product.controller;
 import com.springbeans.cafemenumanagement.global.config.SecurityConfig;
 import com.springbeans.cafemenumanagement.global.constant.RoleConst;
 import com.springbeans.cafemenumanagement.product.controller.AdminProductApiController;
-import com.springbeans.cafemenumanagement.product.dto.ProductSaveRequest;
+import com.springbeans.cafemenumanagement.product.dto.request.ProductSaveRequest;
 import com.springbeans.cafemenumanagement.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

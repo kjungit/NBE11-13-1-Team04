@@ -5,9 +5,9 @@ import com.springbeans.cafemenumanagement.order.dto.response.OrderCancelResponse
 import com.springbeans.cafemenumanagement.order.dto.response.OrderCreateResponse;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderDetailResponse;
 import com.springbeans.cafemenumanagement.order.dto.response.OrderSummaryResponse;
-import com.springbeans.cafemenumanagement.order.entity.Order;
-import com.springbeans.cafemenumanagement.order.entity.OrderProduct;
-import com.springbeans.cafemenumanagement.order.repository.OrderRepository;
+import com.springbeans.cafemenumanagement.order.domain.entity.Order;
+import com.springbeans.cafemenumanagement.order.domain.entity.OrderProduct;
+import com.springbeans.cafemenumanagement.order.domain.repository.OrderRepository;
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;

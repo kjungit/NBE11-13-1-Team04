@@ -2,9 +2,9 @@ package com.springbeans.cafemenumanagement.order.service;
 
 
 import com.springbeans.cafemenumanagement.order.dto.request.CartOrderRequest;
-import com.springbeans.cafemenumanagement.order.entity.Order;
-import com.springbeans.cafemenumanagement.order.entity.OrderProduct;
-import com.springbeans.cafemenumanagement.order.repository.OrderRepository;
+import com.springbeans.cafemenumanagement.order.domain.entity.Order;
+import com.springbeans.cafemenumanagement.order.domain.entity.OrderProduct;
+import com.springbeans.cafemenumanagement.order.domain.repository.OrderRepository;
 import com.springbeans.cafemenumanagement.product.entity.Product;
 import com.springbeans.cafemenumanagement.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.springbeans.cafemenumanagement.product.controller;
 
-import com.springbeans.cafemenumanagement.product.dto.ProductSaveRequest;
-import com.springbeans.cafemenumanagement.product.dto.ProductSaveResponse;
+import com.springbeans.cafemenumanagement.product.dto.request.ProductSaveRequest;
+import com.springbeans.cafemenumanagement.product.dto.response.ProductSaveResponse;
 import com.springbeans.cafemenumanagement.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

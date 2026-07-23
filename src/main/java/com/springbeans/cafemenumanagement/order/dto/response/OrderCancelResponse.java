@@ -1,7 +1,7 @@
 package com.springbeans.cafemenumanagement.order.dto.response;
 
 
-import com.springbeans.cafemenumanagement.order.entity.OrderStatus;
+import com.springbeans.cafemenumanagement.order.domain.entity.OrderStatus;
 
 public record OrderCancelResponse(
 
